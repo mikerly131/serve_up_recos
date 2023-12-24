@@ -5,27 +5,10 @@ Each class is commented below with details about its data and relationships.
 """
 import uuid
 from sqlalchemy import (Column, ForeignKey, Integer, String,
-                        UUID, Date, Enum, Float, CheckConstraint, DateTime, Text)
+                        UUID, Date, Float, CheckConstraint, DateTime, Text)
 from sqlalchemy.orm import relationship
 from .database import Base
 from datetime import date, datetime
-
-
-# Enum for drug-drug interaction severity
-class IssueSeverity(Enum):
-    HARMLESS = 'harmless'
-    MODERATE = 'moderate'
-    SEVERE = 'severe'
-    DEADLY = 'deadly'
-
-
-# Enum for drug-drug interaction chance of happening, probability ranges.
-class ProbabilityType(Enum):
-    UNLIKELY = 'unlikely'  # 0.0-0.15
-    LOW = 'low'  # 0.16-0.40
-    EVEN_CHANCE = 'even_chance'  # .41-.60
-    LIKELY = 'likely'   # .61-.90
-    CERTAIN = 'certain'  # .91-1.0
 
 
 # Patient has an id, given name, family name and 0 to many prescriptions
@@ -85,6 +68,7 @@ class Medication(Base):
 
 # Interactions have two or more medications, one or more issues, and each issue has a risk level and severity.
 # This is essentially my "mocked" AI/ML model predictions and/or its training data at some point.
+# This design might force me to enter 2 interactions where med 1 and med 2 are swapped...yikes
 # TODO - Would a back reference to medications make accessing the data easier?
 class Interaction(Base):
     __tablename__ = "interactions"
@@ -102,10 +86,10 @@ class Issue(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     interaction_id = Column(Integer, ForeignKey('interactions.id'))
-    issue_severity = Column(Enum(IssueSeverity))
+    issue_severity = Column(String, nullable=False)
     issue_warning = Column(String)
     probability = Column(Float)
-    probability_type = Column(Enum(ProbabilityType))
+    probability_type = Column(String, nullable=False)
 
     __table_args__ = (
         CheckConstraint('probability >= 0.0 AND probability <= 1.0', name='check_risk_probability_range'),
@@ -153,14 +137,3 @@ class Prediction(Base):
     id = Column(Integer, primary_key=True, index=True)
     medication_request_id = Column(Integer, ForeignKey('medication_requests.id'))
     interaction_issues_list = Column(Text)
-
-
-
-
-
-
-
-
-
-
-
