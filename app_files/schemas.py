@@ -1,8 +1,8 @@
 """
 Pydantic model (schemas) for reading data from API and creating data.
 """
-from pydantic import BaseModel, UUID4
-from datetime import date
+from pydantic import BaseModel, UUID4, Field
+from datetime import date, datetime
 from enum import Enum
 
 
@@ -23,37 +23,24 @@ class ProbabilityType(str, Enum):
     CERTAIN = 'certain'  # .91-1.0
 
 
-class PrescriptionBase(BaseModel):
+class Prescription(BaseModel):
     dosage: str
     dose_type: str
-
-
-class PrescriptionCreate(PrescriptionBase):
     patient_id: UUID4
     provider_id: UUID4
     medication_id: int
-
-
-class Prescription(PrescriptionBase):
     id: int
 
     class Config:
         orm_mode = True
 
 
-class PatientBase(BaseModel):
+class Patient(BaseModel):
     given_name: str
     family_name: str
     dob: date
     height_ins: int
     weight_lbs: int
-
-
-class PatientCreate(PatientBase):
-    pass
-
-
-class Patient(PatientBase):
     id: UUID4
     prescriptions: list[Prescription] = []
 
@@ -65,6 +52,7 @@ class ProviderBase(BaseModel):
     given_name: str
     family_name: str
     org: str
+    user_name: str
 
 
 class ProviderCreate(ProviderBase):
@@ -73,48 +61,37 @@ class ProviderCreate(ProviderBase):
 
 class Provider(ProviderBase):
     id: UUID4
-    user_name: str
     prescriptions: list[Prescription] = []
 
     class Config:
         orm_mode = True
 
 
-class MedicationBase(BaseModel):
+class Medication(BaseModel):
     name: str
     common_name: str
     manufacturer: str
-
-
-class MedicationCreate(MedicationBase):
-    pass
-
-
-class Medication(MedicationBase):
     id: int
 
     class Config:
         orm_mode = True
 
 
-class IssueBase(BaseModel):
+class Issue(BaseModel):
     issue_severity: IssueSeverity
     issue_warning: str
     probability_type: ProbabilityType
     probability: float
-
-
-class Issue(IssueBase):
     id: int
     interaction_id: int
 
+    class Config:
+        orm_mode = True
 
-class InteractionBase(BaseModel):
+
+class Interaction(BaseModel):
     medication1: int
     medication2: int
-
-
-class Interaction(InteractionBase):
     id = int
     issues: list[Issue] = []
 
@@ -123,15 +100,28 @@ class Interaction(InteractionBase):
 
 
 class MedicationRequestBase(BaseModel):
+    patient_id: UUID4
+    provider_id: UUID4
+    request_dt: Field(default_factory=datetime.utcnow)
+    new_medication: int
+
+
+class MedicationRequestCreate(MedicationRequestBase):
     pass
 
 
 class MedicationRequest(MedicationRequestBase):
-    pass
+    id: int
+    current_medication_ids: str
+
+    class Config:
+        orm_mode = True
 
 
 class PredictionBase(BaseModel):
-    pass
+    interaction_issues_list: str
+    medication_request_id: int
+    request_dt: Field(default_factory=datetime.utcnow)
 
 
 class PredictionCreate(PredictionBase):
@@ -139,6 +129,7 @@ class PredictionCreate(PredictionBase):
 
 
 class Prediction(PredictionBase):
-    pass
+    id: int
 
-
+    class Config:
+        orm_mode = True

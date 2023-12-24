@@ -137,3 +137,4 @@ class Prediction(Base):
     id = Column(Integer, primary_key=True, index=True)
     medication_request_id = Column(Integer, ForeignKey('medication_requests.id'))
     interaction_issues_list = Column(Text)
+    request_dt = Column(DateTime, default=datetime.utcnow)
