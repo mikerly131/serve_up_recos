@@ -1,5 +1,8 @@
 """
 Pydantic model (schemas) for reading data from API and creating data.
+The classes (tables) for the db are given schemas so the app knows how to handle them in API request/response.
+Notice:  Only providers, medication requests and predictions can be created by API.
+            and predictions is only included incase I find an AI/ML as API to hit and get predictions from.
 """
 from pydantic import BaseModel, UUID4, Field
 from datetime import date, datetime
