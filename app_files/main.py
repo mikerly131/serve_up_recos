@@ -42,6 +42,7 @@ async def get_register_provider():
 
 
 # Path - POST: create a provider if the user_name isn't already registered
+# Maybe this should return login template.
 @app.post("/providers/register", response_model=schemas.Provider)
 def register_provider(provider: schemas.ProviderCreate, db: Session = Depends(get_db)):
     a_provider = crud.get_provider(db, provider.user_name)
