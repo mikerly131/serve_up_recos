@@ -70,7 +70,7 @@ def get_medications(db: Session):
     medications = db.query(models.Medication).all()
     return medications
 
-# UNECESSARY - patient_details returns prescriptions objects
+# UNNECESSARY - patient_details returns prescriptions objects
 # def get_prescriptions(db: Session, prescriptions):
 #     prescription_details = []
 #     for prescription in prescriptions:
@@ -119,7 +119,7 @@ def make_ddi_predictions(db: Session, mr_id: int):
     pass
 
 
-# Helper function for the make_ddi_predictions (ddi) to return top 3 issues by severity
+# Helper function for the serve_ddi_issues to return top 3 issues by severity
 def get_ddi_issues(db: Session, med1: int, med2: int):
     return "foo"
 

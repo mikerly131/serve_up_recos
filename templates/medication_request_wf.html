@@ -10,14 +10,23 @@
 </head>
 <body>
     <h1>Medication Request</h1>
+    <!-- Form for medication request -->
     <form id="mr_form" action="{{ url_for('medication_request') }}" method="post">
         Medication Name: <input type="text" name="medication_name" required><br>
         Dosage: <input type="text" name="dosage" required><br>
+        Dose Type:
+        <select name="dose_type" required>
+            <option value="type1">Oral</option>
+            <option value="type2">Topical</option>
+            <option value="type3">Injection</option>
+        </select><br>
+        Duration: <input type="text" name="duration"><br>
         <button id="submitBtn" type="submit">Submit Request</button>
+        <!-- Buttons to activate after form submission: Confirm, Redo actions -->
         <button id="confirmBtn" class="hidden" type="button" onclick="confirmRequest()">Confirm Request</button>
         <button id="redoBtn" class="hidden" type="button" onclick="redoRequest()">Redo Request</button>
     </form>
-
+    <!-- After request, display drug-drug interaction issues -->
     {% if issue_list %}
         <h2>Drug Interactions: Top Issues</h2>
         <ul>
@@ -27,23 +36,7 @@
         </ul>
     {% endif %}
 
-    <script>
-        function confirmRequest() {
-            alert('Confirmed Medication Request!');
-        }
-
-        function redoRequest() {
-            document.getElementById('submitBtn').disabled = false;
-            document.getElementById('confirmBtn').classList.add('hidden');
-            document.getElementById('redoBtn').classList.add('hidden');
-        }
-
-        document.getElementById('submitBtn').addEventListener('click', function () {
-            this.disabled = true;
-            document.getElementById('confirmBtn').classList.remove('hidden');
-            document.getElementById('redoBtn').classList.remove('hidden');
-        });
-
+    <script src="{{ url_for('static', filename='scripts.js') }}">
     </script>
 </body>
 </html>
