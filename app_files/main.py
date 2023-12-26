@@ -5,6 +5,7 @@ from uuid import UUID
 
 from fastapi import Depends, FastAPI, HTTPException, Request
 from fastapi.responses import RedirectResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from . import crud, models, schemas
 from .database import SessionLocal, engine
@@ -13,7 +14,7 @@ from fastapi.templating import Jinja2Templates
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory="serve_up_recos/static"), name="static")
 templates = Jinja2Templates(directory="serve_up_recos/templates")
 
 
@@ -81,7 +82,7 @@ def login_provider(user_name: str, password: str, db: Session = Depends(get_db))
 def setup_encounter(request: Request, user_name: str, db: Session = Depends(get_db)):
     patients = crud.get_patients(db)
     workflows = {1: "medication_request"}
-    return templates.TemplateResponse("encounter_setup.html",{
+    return templates.TemplateResponse("encounter_setup.html", {
         "request": request, "provider": user_name, "patients": patients, "workflows": workflows})
 
 
@@ -118,5 +119,3 @@ def medication_request(request: Request, user_name: str,
         "issue_list": issue_list,
     }
     return templates.TemplateResponse(template_name, template_context)
-
-

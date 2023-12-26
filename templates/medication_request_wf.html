@@ -33,8 +33,10 @@
     <h1>Medication Request</h1>
     <!-- Form for medication request -->
     <form id="mr_form" action="{{ url_for('medication_request') }}" method="post">
-        <label for="medication_select">Medication:</label>
-        <select name="medication_name" id="medication_select" required>
+        <input type="hidden" name="user_name" value="{{ user_name }}">
+        <input type="hidden" name="patient_id" value="{{ patient_id }}">
+        <label for="new_med">Medication:</label>
+        <select name="new_med" id="new_med" required>
             {% for medication in medications %}
             <option value="{{ medication.common_name }}">{{ medication.common_name }}</option>
             {% endfor %}
@@ -48,10 +50,8 @@
         </select><br>
         Duration: <input type="text" name="duration"><br>
         <button id="submitBtn" type="submit">Submit Request</button>
-        <!-- Buttons to activate after form submission: Confirm, Redo actions -->
-        <button id="confirmBtn" class="hidden" type="button" onclick="confirmRequest()">Confirm Request</button>
-        <button id="redoBtn" class="hidden" type="button" onclick="redoRequest()">Redo Request</button>
     </form>
+
     <!-- After request, display drug-drug interaction issues -->
     {% if issue_list %}
         <h2>Drug Interactions: Top Issues</h2>
@@ -63,8 +63,11 @@
         </ul>
     {% endif %}
 
+    <!-- Buttons to activate after form submission: Confirm, Redo actions -->
+    <button id="confirmBtn" class="hidden" type="button" onclick="confirmRequest()">Confirm Request</button>
+    <button id="redoBtn" class="hidden" type="button" onclick="redoRequest()">Redo Request</button>
+
     <!-- JS to hide/unhide buttons after form submission, redirect user on confirmation -->
-    <script src="{{ url_for('static', filename='scripts.js') }}">
-    </script>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </body>
 </html>
