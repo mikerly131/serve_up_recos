@@ -94,28 +94,21 @@ def start_workflow(request: Request, user_name: str, workflow_name: str,
             "request": request, "provider": user_name, "workflow_data": workflow_data})
 
 
+# PATH - POST: Submit medication request, get back issues for drug-drug interactions and show them
 @app.post("/encounter/{user_name}/{patient_name}/{workflow_name}")
 def medication_request(request: Request, user_name: str,
                        patient_id: UUID, new_med: int, db: Session = Depends(get_db)):
     mr_id = crud.make_medication_request(db, patient_id, user_name, new_med)
-    predictions = crud.make_ddi_predictions(mr_id)
+    issue_list = crud.serve_ddi_issues(db, mr_id)
+    template_name = "medication_request.html"
+    template_context = {
+        "request": request,
+        "user_name": user_name,
+        "patient_name": patient_name,
+        "workflow_name": workflow_name,
+        "new_med": new_med,
+        "issue_list": issue_list,
+    }
+    return templates.TemplateResponse(template_name, template_context)
 
 
-    # get predictions
-    # re-render the workflow template with medication requests displayed
-
-
-
-
-
-
-# Example of how to make medication request
-# Assuming you have a session object already created
-# medication_request = MedicationRequest(patient_id=some_patient_id, provider_id=some_provider_id)
-# medication_request.set_medication_ids(session)  # Retrieve and set medication IDs
-# session.add(medication_request)
-# session.commit()
-
-# Retrieve medication IDs from the MedicationRequest instance
-# medication_ids = medication_request.get_medication_ids()
-# print("Medication IDs:", medication_ids)

@@ -1,10 +1,49 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Medication Request</title>
+    <style>
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
+    <h1>Medication Request</h1>
+    <form id="mr_form" action="{{ url_for('medication_request') }}" method="post">
+        Medication Name: <input type="text" name="medication_name" required><br>
+        Dosage: <input type="text" name="dosage" required><br>
+        <button id="submitBtn" type="submit">Submit Request</button>
+        <button id="confirmBtn" class="hidden" type="button" onclick="confirmRequest()">Confirm Request</button>
+        <button id="redoBtn" class="hidden" type="button" onclick="redoRequest()">Redo Request</button>
+    </form>
 
+    {% if issue_list %}
+        <h2>Drug Interactions: Top Issues</h2>
+        <ul>
+            {% for issue in issue_list%}
+                <li>{{ issue }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <script>
+        function confirmRequest() {
+            alert('Confirmed Medication Request!');
+        }
+
+        function redoRequest() {
+            document.getElementById('submitBtn').disabled = false;
+            document.getElementById('confirmBtn').classList.add('hidden');
+            document.getElementById('redoBtn').classList.add('hidden');
+        }
+
+        document.getElementById('submitBtn').addEventListener('click', function () {
+            this.disabled = true;
+            document.getElementById('confirmBtn').classList.remove('hidden');
+            document.getElementById('redoBtn').classList.remove('hidden');
+        });
+
+    </script>
 </body>
 </html>

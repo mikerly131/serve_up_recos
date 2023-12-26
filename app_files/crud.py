@@ -97,14 +97,31 @@ def make_medication_request(db: Session, patient_id: UUID, user_name: str, new_m
     return medication_request.id
 
 
+# Function to get the drug-drug interaction issues for a medication request
+def serve_ddi_issues(db: Session, mr_id: int):
+    # get the medication reqeust
+    mr = db.query(models.MedicationRequest).filter(models.Medication.id == mr_id).first()
+    # loop through each current medications
+    current_meds = list(map(int, mr.current_medication_ids.split()))
+    issue_list = []
+    for med in current_meds:
+        # get issues for med and new_med
+        issues = get_ddi_issues(db, mr.new_med, med)
+        # if there are issues, get the issues and put them in the issue list
+        if issues:
+            for issue in issues:
+                issue_list.append(issue)
+    return issue_list
+
+
 # Helper function for medication request to return predictions of drug-drug interactions (ddi)
 def make_ddi_predictions(db: Session, mr_id: int):
     pass
 
 
 # Helper function for the make_ddi_predictions (ddi) to return top 3 issues by severity
-def get_ddi_issues():
-    pass
+def get_ddi_issues(db: Session, med1: int, med2: int):
+    return "foo"
 
 
 # Function to place a medication order for the medication request workflow

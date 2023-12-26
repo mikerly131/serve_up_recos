@@ -66,7 +66,7 @@ class Medication(Base):
     manufacturer = Column(String(length=50))
 
 
-# Interactions have two or more medications, one or more issues, and each issue has a risk level and severity.
+# Interactions limited to 2 meds, one or more issues, and each issue has a risk level and severity (READ).
 # This is essentially my "mocked" AI/ML model predictions and/or its training data at some point.
 # This design might force me to enter 2 interactions where med 1 and med 2 are swapped...yikes
 # TODO - Would a back reference to medications make accessing the data easier?
@@ -80,7 +80,7 @@ class Interaction(Base):
     issues = relationship('Issue', back_populates='interaction')
 
 
-# Issue belongs to an interaction
+# Issue belongs to an interaction (READ)
 class Issue(Base):
     __tablename__ = "issues"
 
