@@ -46,6 +46,7 @@ class Prescription(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     medication_id = Column(Integer, ForeignKey("medications.id"))
+    common_name = Column(String(length=40), ForeignKey("medications.common_name"))
     dosage = Column(String)
     dose_type = Column(String)
     patient_id = Column(UUID(as_uuid=True), ForeignKey("patients.id"))

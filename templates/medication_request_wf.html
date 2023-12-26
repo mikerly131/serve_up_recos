@@ -9,10 +9,36 @@
     </style>
 </head>
 <body>
+    <h1>Patient Information</h1>
+    <!-- Section Patient Info:  path response passes patient object, decompose and display it -->
+    Given Name: {{ patient.give_name }}
+    Family Name: {{ patient.family_name }}
+    Date of Birth: {{ patient.dob }}
+    Height (in): {{ patient.height_ins }}
+    Weight (lb): {{ patient.weight_lbs }}
+    <h3> Prescriptions: </h3>
+        {% if patient.prescriptions %}
+            {% for prescription in patient.prescriptions %}
+            <ul>
+                <li>{{ prescription.common_name }}</li>
+                <li>{{ prescription.dosage }}</li>
+                <li>{{ prescription.does_type }}</li>
+            </ul>
+            {% endfor %}
+        {% else % }
+            <p>No Prescriptions</p>
+        {% endif %}
+    <br>
+
     <h1>Medication Request</h1>
     <!-- Form for medication request -->
     <form id="mr_form" action="{{ url_for('medication_request') }}" method="post">
-        Medication Name: <input type="text" name="medication_name" required><br>
+        <label for="medication_select">Medication:</label>
+        <select name="medication_name" id="medication_select" required>
+            {% for medication in medications %}
+            <option value="{{ medication.common_name }}">{{ medication.common_name }}</option>
+            {% endfor %}
+        </select><br>
         Dosage: <input type="text" name="dosage" required><br>
         Dose Type:
         <select name="dose_type" required>
@@ -29,13 +55,15 @@
     <!-- After request, display drug-drug interaction issues -->
     {% if issue_list %}
         <h2>Drug Interactions: Top Issues</h2>
+        <h3>New Medication: {{ new_med }} </h3>
         <ul>
-            {% for issue in issue_list%}
+            {% for issue in issue_list %}
                 <li>{{ issue }}</li>
             {% endfor %}
         </ul>
     {% endif %}
 
+    <!-- JS to hide/unhide buttons after form submission, redirect user on confirmation -->
     <script src="{{ url_for('static', filename='scripts.js') }}">
     </script>
 </body>

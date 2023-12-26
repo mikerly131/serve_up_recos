@@ -25,12 +25,11 @@ def get_db():
     finally:
         db.close()
 
-# Templates I will need:
+# MVP Templates I will need:
 #   register and login - maybe one, could be two
 #   select workflow & patient - call this the encounter setup template
 #   medication request -  load in the patients details, prescriptions, medications
-#   medication requested - include predictions to the above template or duplicate similar template
-#   medication order - end template, from here provider can pick another patient or workflow.
+#   medication requested - re-render prior template with ddi issues or duplicate similar template
 
 
 # Path - GET: base/root page with minimal info and links to register/login
@@ -86,27 +85,35 @@ def setup_encounter(request: Request, user_name: str, db: Session = Depends(get_
         "request": request, "provider": user_name, "patients": patients, "workflows": workflows})
 
 
-@app.get("/encounter/{user_name}/{patient_name}/{workflow_name}")
+# Path - GET: Start medication request workflow, show patient data,
+# and show their prescriptions and list of meds that can be selected to request
+@app.get("/encounter/medication_request")
 def start_workflow(request: Request, user_name: str, workflow_name: str,
                    patient_id: UUID, db: Session = Depends(get_db)):
     if workflow_name == "medication_request":
         workflow_data = crud.get_workflow_data(db, patient_id)
+        patient = workflow_data[0]
+        medications = workflow_data[1]
         return templates.TemplateResponse("medication_request_wf.html", {
-            "request": request, "provider": user_name, "workflow_data": workflow_data})
+            "request": request, "provider": user_name, "patient": patient, "medications": medications})
 
 
 # PATH - POST: Submit medication request, get back issues for drug-drug interactions and show them
-@app.post("/encounter/{user_name}/{patient_name}/{workflow_name}")
+@app.post("/encounter/medication_request")
 def medication_request(request: Request, user_name: str,
                        patient_id: UUID, new_med: int, db: Session = Depends(get_db)):
     mr_id = crud.make_medication_request(db, patient_id, user_name, new_med)
     issue_list = crud.serve_ddi_issues(db, mr_id)
-    template_name = "medication_request.html"
+    workflow_data = crud.get_workflow_data(db, patient_id)
+    patient = workflow_data[0]
+    medications = workflow_data[1]
+    # Is this a better style for returning the template as data grows?
+    template_name = "medication_request_wf.html"
     template_context = {
         "request": request,
         "user_name": user_name,
-        "patient_name": patient_name,
-        "workflow_name": workflow_name,
+        "patient": patient,
+        "medications": medications,
         "new_med": new_med,
         "issue_list": issue_list,
     }

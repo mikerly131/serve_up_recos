@@ -114,14 +114,17 @@ def serve_ddi_issues(db: Session, mr_id: int):
     return issue_list
 
 
+# Helper function for the serve_ddi_issues to return top 3 issues by severity
+def get_ddi_issues(db: Session, med1: int, med2: int):
+    interaction = db.query(models.Interaction).filter(models.Interaction.medication1 == med1,
+                                                      models.Interaction.medication2 == med2).first()
+    ddi_issues = interaction.issues
+    return ddi_issues
+
+
 # Helper function for medication request to return predictions of drug-drug interactions (ddi)
 def make_ddi_predictions(db: Session, mr_id: int):
     pass
-
-
-# Helper function for the serve_ddi_issues to return top 3 issues by severity
-def get_ddi_issues(db: Session, med1: int, med2: int):
-    return "foo"
 
 
 # Function to place a medication order for the medication request workflow
