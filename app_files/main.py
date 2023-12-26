@@ -14,8 +14,8 @@ from fastapi.templating import Jinja2Templates
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="serve_up_recos/static"), name="static")
-templates = Jinja2Templates(directory="serve_up_recos/templates")
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="app_files/templates")
 
 
 # DB Dependency
@@ -58,7 +58,7 @@ def register_provider(provider: schemas.ProviderCreate, db: Session = Depends(ge
 
 # Path - GET: page for logging in a provider
 @app.get("/providers/login")
-async def get_register_provider(request: Request):
+async def get_login_provider(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
 

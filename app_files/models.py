@@ -5,7 +5,7 @@ Each class is commented below with details about its data and relationships.
 """
 import uuid
 from sqlalchemy import (Column, ForeignKey, Integer, String,
-                        UUID, Date, Float, CheckConstraint, DateTime, Text)
+                        Date, Float, CheckConstraint, DateTime, Text)
 from sqlalchemy.orm import relationship
 from .database import Base
 from datetime import date, datetime
@@ -16,7 +16,7 @@ from datetime import date, datetime
 class Patient(Base):
     __tablename__ = "patients"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
+    id = Column(String, primary_key=True, default=str(uuid.uuid4()), index=True)
     given_name = Column(String(length=40))
     family_name = Column(String(length=60))
     dob = Column(Date, default=date(1970, 1, 1))
@@ -30,7 +30,7 @@ class Patient(Base):
 class Provider(Base):
     __tablename__ = "providers"
 
-    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
+    id = Column(String, primary_key=True, default=str(uuid.uuid4()), index=True)
     user_name = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     given_name = Column(String(length=40))
@@ -49,8 +49,8 @@ class Prescription(Base):
     common_name = Column(String(length=40), ForeignKey("medications.common_name"))
     dosage = Column(String)
     dose_type = Column(String)
-    patient_id = Column(UUID(as_uuid=True), ForeignKey("patients.id"))
-    provider_id = Column(UUID(as_uuid=True), ForeignKey("providers.id"))
+    patient_id = Column(String, ForeignKey("patients.id"))
+    provider_id = Column(String, ForeignKey("providers.id"))
 
     patient = relationship("Patient", back_populates="prescriptions")
     provider = relationship("Provider", back_populates="prescriptions")
@@ -104,8 +104,8 @@ class MedicationRequest(Base):
     __tablename__ = "medication_requests"
 
     id = Column(Integer, primary_key=True, index=True)
-    patient_id = Column(UUID(as_uuid=True), ForeignKey("patients.id"))
-    provider_id = Column(UUID(as_uuid=True), ForeignKey("providers.id"))
+    patient_id = Column(String, ForeignKey("patients.id"))
+    provider_id = Column(String, ForeignKey("providers.id"))
     request_dt = Column(DateTime, default=datetime.utcnow)
     current_medication_ids = Column(String)
     new_medication = Column(Integer, ForeignKey('medications.id'))

@@ -95,7 +95,7 @@ class Issue(BaseModel):
 class Interaction(BaseModel):
     medication1: int
     medication2: int
-    id = int
+    id: int
     issues: list[Issue] = []
 
     class Config:
@@ -105,7 +105,7 @@ class Interaction(BaseModel):
 class MedicationRequestBase(BaseModel):
     patient_id: UUID4
     provider_id: UUID4
-    request_dt: Field(default_factory=datetime.utcnow)
+    request_dt: datetime = Field(default_factory=datetime.utcnow)
     new_medication: int
 
 
@@ -124,7 +124,7 @@ class MedicationRequest(MedicationRequestBase):
 class PredictionBase(BaseModel):
     interaction_issues_list: str
     medication_request_id: int
-    request_dt: Field(default_factory=datetime.utcnow)
+    request_dt: datetime = Field(default_factory=datetime.utcnow)
 
 
 class PredictionCreate(PredictionBase):
