@@ -66,9 +66,8 @@ async def get_login_provider(request: Request):
 
 
 # Path - POST: login a provider, validate user_name and email.
-# Need to replace return a_provider with the actual place to send customer
 # Maybe use oauth or something else to generate session tokens
-@app.post("/providers/login", response_model=schemas.Provider)
+@app.post("/providers/login")
 def login_provider(user_name: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
     a_provider = crud.login_provider(db, user_name, password)
     if a_provider == 'Password':
@@ -77,14 +76,14 @@ def login_provider(user_name: str = Form(...), password: str = Form(...), db: Se
         raise HTTPException(status_code=401, detail="Provider not found")
     else:
         redirect_url = f"/encounter/setup?user_name={a_provider.user_name}"
-        return RedirectResponse(url=redirect_url)
+        return RedirectResponse(redirect_url, status_code=303)
 
 
 # Path - GET: Show a logged in provider the workflows and patients they can choose (1 each) to start the workflow
 @app.get("/encounter/setup")
 def setup_encounter(request: Request, user_name: str, db: Session = Depends(get_db)):
     patients = crud.get_patients(db)
-    workflows = {1: "medication_request"}
+    workflows = {1: "Medication Request"}
     return templates.TemplateResponse("encounter_setup.html", {
         "request": request, "provider": user_name, "patients": patients, "workflows": workflows})
 

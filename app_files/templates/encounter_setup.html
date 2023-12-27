@@ -2,9 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Encounter Setup</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
 </head>
 <body>
+        {% include 'header.html' %}
+        <div class="index-body">
+            <h1>Encounter Setup</h1>
+            <label for="workflow_select">Select a workflow:</label>
+            <select name="workflow_name" id="workflow_select" required>
+                {% for workflow in workflows.values() %}
+                <option value="{{ workflow }}">{{ workflow }}</option>
+                {% endfor %}
+            </select><br>
+        </div>
 
 </body>
 </html>
