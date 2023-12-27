@@ -1,10 +1,15 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #D3D3D3
+}
+
 .index-body {
     font-family: Palatino, "URW Palladio L", Trebuchet, serif;
     line-height: 1.6;
     color: #222;
     padding: 2rem;
     margin: auto;
-    background: #fafafa;
 }
 
 h1 {
@@ -26,6 +31,38 @@ h1 {
     color: white;
     border: none;
     border-radius: 5px;
+}
+
+/* This section is for styling the header template to be included in other html templates */
+.header {
+  border-bottom: 2px solid #ccc;
+  padding: .5em 1em;
+  display: flex;
+  justify-content: space-between;
+  background-color: #483D8B;
+}
+
+.nav-title h1 {
+  font-size: 2em;
+  margin: .5em 0;
+  display: inline-block;
+}
+
+.header a {
+  text-decoration: none;
+  color: white;
+}
+
+
+.nav-links ul, li {
+  margin: 0;
+  padding: 0;
+  color: white;
+}
+
+.nav-links li {
+  display: inline-block;
+  margin: 1.4em 1em 1em 1em;
 }
 
 /* This section is for styling my register and login forms */

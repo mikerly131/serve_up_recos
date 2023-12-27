@@ -6,10 +6,13 @@
     <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
 </head>
 <body>
+
+    {% include 'header.html' %}
+
     <div class="index-body">
         <h1>Provider Login</h1>
         <form method="post" action="/providers/login" class="form">
-           <p class="form-title">Sign in to your account</p>
+           <p class="form-title">Log in to your account</p>
             <div class="input-container">
               <input type="user_name" placeholder="Enter username">
               <span>

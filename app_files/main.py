@@ -3,7 +3,7 @@ Main script that runs my application.
 """
 from uuid import UUID
 
-from fastapi import Depends, FastAPI, HTTPException, Request
+from fastapi import Depends, FastAPI, HTTPException, Request, Form
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
@@ -47,8 +47,11 @@ async def get_register_provider(request: Request):
 
 # Path - POST: create a provider if the user_name isn't already registered, redirect to login after user registered
 @app.post("/providers/register")
-def register_provider(provider: schemas.ProviderCreate, db: Session = Depends(get_db)):
-    a_provider = crud.get_provider(db, provider.user_name)
+def register_provider(user_name: str = Form(...), password: str = Form(...), given_name: str = Form(...),
+                      family_name: str = Form(...), org: str = Form(...), db: Session = Depends(get_db)):
+    provider = schemas.ProviderCreate(given_name=given_name, family_name=family_name,
+                                      org=org, user_name=user_name, password=password)
+    a_provider = crud.get_provider(db, user_name)
     if a_provider:
         raise HTTPException(status_code=400, detail="Username already registered")
     else:
