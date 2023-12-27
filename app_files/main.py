@@ -69,7 +69,7 @@ async def get_login_provider(request: Request):
 # Need to replace return a_provider with the actual place to send customer
 # Maybe use oauth or something else to generate session tokens
 @app.post("/providers/login", response_model=schemas.Provider)
-def login_provider(user_name: str, password: str, db: Session = Depends(get_db)):
+def login_provider(user_name: str = Form(...), password: str = Form(...), db: Session = Depends(get_db)):
     a_provider = crud.login_provider(db, user_name, password)
     if a_provider == 'Password':
         raise HTTPException(status_code=401, detail="Invalid password")

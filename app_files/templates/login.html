@@ -14,12 +14,12 @@
         <form method="post" action="/providers/login" class="form">
            <p class="form-title">Log in to your account</p>
             <div class="input-container">
-              <input type="user_name" placeholder="Enter username">
+              <input type="text" name="user_name" placeholder="Enter username" required>
               <span>
               </span>
           </div>
           <div class="input-container">
-              <input type="password" placeholder="Enter password">
+              <input type="password" name="password" placeholder="Enter password" required>
             </div>
              <button type="submit" class="submit">
             Sign in
