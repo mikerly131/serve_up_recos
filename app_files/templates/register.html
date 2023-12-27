@@ -2,9 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Provider Registration</title>
+    <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
 </head>
 <body>
+    <div class="index-body">
+        <h1>Provider Registration</h1>
+        <form method="post" action="/providers/register" class="form">
+           <p class="form-title">Register a provider account</p>
+            <div class="input-container">
+              <input type="user_name" placeholder="Enter a username">
+              <span>
+              </span>
+          </div>
+          <div class="input-container">
+              <input type="password" placeholder="Enter a password">
+            </div>
+             <button type="submit" class="submit">
+            Sign in
+          </button>
+
+          <p class="register-link">
+            Already registered?
+            <a href="{{ url_for('get_login_provider') }}">Register</a>
+          </p>
+       </form>
+    </div>
 
 </body>
 </html>

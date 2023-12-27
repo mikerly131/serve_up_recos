@@ -3,13 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>serveUpRecos</title>
+    <link rel="stylesheet" href="static/styles.css">
 </head>
 <body>
-    <h1>Welcome to serveUpRecos</h1>
-    <p>Please login or register as a provider</p>
-    <div>
-        <a href="{{ url_for('get_register_provider') }}">Register</a><br>
-        <a href="{{ url_for('get_login_provider') }}">Login</a>
+    <div class="index-body">
+        <h1>Welcome to serveUpRecos</h1>
+        <p>Please login or register as a provider</p>
+        <div>
+            <a href="{{ url_for('get_register_provider') }}" class="button m1-vb">Register</a> <br>
+            <a href="{{ url_for('get_login_provider') }}" class="button">Login</a>
+        </div>
     </div>
 
 </body>

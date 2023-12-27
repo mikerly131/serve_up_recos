@@ -4,6 +4,9 @@
 .DS_store
 /.DS_store
 
+# Local DB
+sql_app.db
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
