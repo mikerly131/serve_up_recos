@@ -10,60 +10,100 @@
 </head>
 <body>
     <h1>Patient Information</h1>
-    <!-- Section Patient Info:  path response passes patient object, decompose and display it -->
-    Given Name: {{ patient.give_name }}
-    Family Name: {{ patient.family_name }}
-    Date of Birth: {{ patient.dob }}
-    Height (in): {{ patient.height_ins }}
-    Weight (lb): {{ patient.weight_lbs }}
+
+    <!-- Section: Patient Bio and Vitals -->
+    <section class="patient_bio">
+        Preferred Name: {{ patient.preferred_name }}
+        Given Name: {{ patient.given_name }}
+        Family Name: {{ patient.family_name }}
+        Date of Birth: {{ patient.dob }}
+        Height (in): {{ patient.height_ins }}
+        Weight (lb): {{ patient.weight_lbs }}
+        Bio Gender: {{ patient.bio_gender }}
+        Gender Identity: {{ patient.gender_identity }}
+    </section>
+
+    <!-- Section: Patient Medical Info -->
+    <section class="patient_med_info">
     <h3> Prescriptions: </h3>
         {% if patient.prescriptions %}
             {% for prescription in patient.prescriptions %}
             <ul>
-                <li>{{ prescription.common_name }}</li>
-                <li>{{ prescription.dosage }}</li>
-                <li>{{ prescription.does_type }}</li>
+                <li>{{ prescription.medication_name }}</li>
+                <li>{{ prescription.dose_type }}</li>
+                <li>{{ prescription.dose_amount }}</li>
+                <li>{{ prescription.frequency }}</li>
             </ul>
             {% endfor %}
         {% else % }
             <p>No Prescriptions</p>
         {% endif %}
     <br>
+    <!-- Add this section after MVP
+    <h3> Conditions: </h3>
+        {% if patient.conditions %}
+            {% for condition in patient.conditions %}
+            <ul>
+                <li>{{ condition.common_name }}</li>
+                <li>{{ condition.type }}</li>
+                <li>{{ condition.description }}</li>
+            </ul>
+            {% endfor %}
+        {% else % }
+            <p>No Diagnosed Conditions</p>
+        {% endif %}
+    <br>
+    <h3> Allergies: </h3>
+        {% if patient.allergies %}
+            {% for allergy in patient.allergies %}
+            <ul>
+                <li>{{ allergy.common_name }}</li>
+                <li>{{ allergy.dosage }}</li>
+                <li>{{ allergy.does_type }}</li>
+            </ul>
+            {% endfor %}
+        {% else % }
+            <p>No Prescriptions</p>
+        {% endif %}
+        -->
+    </section>
 
+    <!-- Section: Medication Request -->
+    <section class="medication_reqeust">
     <h1>Medication Request</h1>
-    <!-- Form for medication request -->
-    <form id="mr_form" action="{{ url_for('medication_request') }}" method="post">
-        <input type="hidden" name="user_name" value="{{ user_name }}">
-        <input type="hidden" name="patient_id" value="{{ patient_id }}">
-        <label for="new_med">Medication:</label>
-        <select name="new_med" id="new_med" required>
-            {% for medication in medications %}
-            <option value="{{ medication.common_name }}">{{ medication.common_name }}</option>
-            {% endfor %}
-        </select><br>
-        Dosage: <input type="text" name="dosage" required><br>
-        Dose Type:
-        <select name="dose_type" required>
-            <option value="type1">Oral</option>
-            <option value="type2">Topical</option>
-            <option value="type3">Injection</option>
-        </select><br>
-        Duration: <input type="text" name="duration"><br>
-        <button id="submitBtn" type="submit">Submit Request</button>
-    </form>
 
-    <!-- After request, display drug-drug interaction issues -->
-    {% if issue_list %}
-        <h2>Drug Interactions: Top Issues</h2>
-        <h3>New Medication: {{ new_med }} </h3>
-        <ul>
-            {% for issue in issue_list %}
-                <li>{{ issue }}</li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+        <!-- Form for medication request -->
+        <form id="mr_form" action="{{ url_for('medication_request') }}" method="post">
+            <input type="hidden" name="user_name" value="{{ user_name }}">
+            <input type="hidden" name="patient_id" value="{{ patient_id }}">
+            <label for="new_med">Medication:</label>
+            <select name="new_med" id="new_med" required onchange="updateDoseType()">
+                {% for medication in medications %}
+                <option value="{{ medication.name }}" data-app-type="{{ medication.app_type }}">
+                    {{ medication.name }} {{ medication.app_type }} {{ medication.amount }}
+                </option>
+                {% endfor %}
+            </select><br>
+            Dosage: <input type="text" name="dosage" required><br>
+            Frequency: <input type="text" name="frequency" required><br>
+            Dose Type: <span id="display_dose_type"></span><br>
+            Duration: <input type="text" name="duration"><br>
+            <button id="submitBtn" type="submit">Submit Request</button>
+        </form>
 
-    <!-- Buttons to activate after form submission: Confirm, Redo actions -->
+        <!-- After request, display drug-drug interaction issues -->
+        {% if issue_list %}
+            <h2>Drug Interactions: Top Issues</h2>
+            <h3>New Medication: {{ new_med }} </h3>
+            <ul>
+                {% for issue in issue_list %}
+                    <li>{{ issue }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </section>
+
+    <!-- Buttons to activate after form submission: Confirm, Redo actions (maybe put in form)-->
     <button id="confirmBtn" class="hidden" type="button" onclick="confirmRequest()">Confirm Request</button>
     <button id="redoBtn" class="hidden" type="button" onclick="redoRequest()">Redo Request</button>
 

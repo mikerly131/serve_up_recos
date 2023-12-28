@@ -11,33 +11,37 @@ from .database import Base
 from datetime import date, datetime
 
 
-# Patient has an id, given name, family name and 0 to many prescriptions
-# Patients also have some arbitrary data for filling out the screen - dob, height(inches), weight(pounds)
+# Patient have 0 to many prescriptions, allergies and conditions (MVP: prescriptions)
 class Patient(Base):
     __tablename__ = "patients"
 
-    id = Column(String, primary_key=True, default=str(uuid.uuid4()), index=True)
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()), index=True)
     given_name = Column(String(length=40))
+    preferred_name = Column(String(length=40))
     family_name = Column(String(length=60))
-    dob = Column(Date, default=date(1970, 1, 1))
+    dob = Column(Date, default=date(1900, 1, 1))
     height_ins = Column(Integer)
     weight_lbs = Column(Integer)
+    bio_gender = Column(String(length=20))
+    gender_identity = Column(String(length=20))
+
+    # Will I even have time to make use of these relationships?
+    # allergies = relationship("Allergy", back_populates="patient")
+    # conditions = relationship("Condition", back_populates="patient")
     prescriptions = relationship("Prescription", back_populates="patient")
 
 
-# Provider has an id, given name, family name, organization, and 0 to many prescriptions ordered
+# Provider are the users, they prescribe 0 to many medications for a patient.
 # These are also the "users" of the application.  Adding username and password for now, might make users table.
 class Provider(Base):
     __tablename__ = "providers"
 
-    id = Column(String, primary_key=True, default=str(uuid.uuid4()), index=True)
+    id = Column(String, primary_key=True, default=lambda: str(uuid.uuid4()), index=True)
     user_name = Column(String, unique=True, index=True)
     hashed_password = Column(String)
     given_name = Column(String(length=40))
     family_name = Column(String(length=60))
     org = Column(String(length=50))
-
-    prescriptions = relationship("Prescription", back_populates="provider")
 
 
 # Prescription has a patient, provider, medication, dosage, dose type
@@ -46,37 +50,37 @@ class Prescription(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     medication_id = Column(Integer, ForeignKey("medications.id"))
-    common_name = Column(String(length=40), ForeignKey("medications.common_name"))
-    dosage = Column(String)
+    medication_name = Column(String(length=100))
+    dose_amount = Column(String)
     dose_type = Column(String)
+    frequency = Column(String)
+    duration = Column(String)
     patient_id = Column(String, ForeignKey("patients.id"))
     provider_id = Column(String, ForeignKey("providers.id"))
 
     patient = relationship("Patient", back_populates="prescriptions")
-    provider = relationship("Provider", back_populates="prescriptions")
 
 
 # Medications have a name, manufacturer, and used in 0 to many prescriptions
-# TODO - Do I reference the name or common name in the Prescriptions table to make reading simpler?
 class Medication(Base):
     __tablename__ = "medications"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(length=100))
-    common_name = Column(String(length=40))
-    manufacturer = Column(String(length=50))
+    rxcui = Column(Integer, unique=True)
+    app_type = Column(String(length=20))
+    amount = Column(String)
 
 
 # Interactions limited to 2 meds, one or more issues, and each issue has a risk level and severity (READ).
 # This is essentially my "mocked" AI/ML model predictions and/or its training data at some point.
 # This design might force me to enter 2 interactions where med 1 and med 2 are swapped...yikes
-# TODO - Would a back reference to medications make accessing the data easier?
 class Interaction(Base):
     __tablename__ = "interactions"
 
     id = Column(Integer, primary_key=True, index=True)
-    medication1 = Column(Integer, ForeignKey('medications.id'))
-    medication2 = Column(Integer, ForeignKey('medications.id'))
+    medication1 = Column(Integer, ForeignKey('medications.rxcui'))
+    medication2 = Column(Integer, ForeignKey('medications.rxcui'))
 
     issues = relationship('Issue', back_populates='interaction')
 

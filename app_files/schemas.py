@@ -27,11 +27,14 @@ class ProbabilityType(str, Enum):
 
 
 class Prescription(BaseModel):
-    dosage: str
+    dose_amount: str
     dose_type: str
+    frequency: str
+    duration: str
     patient_id: UUID4
     provider_id: UUID4
     medication_id: int
+    medication_name: str
     id: int
 
     class Config:
@@ -45,6 +48,8 @@ class Patient(BaseModel):
     height_ins: int
     weight_lbs: int
     id: UUID4
+    bio_gender: str
+    gender_identity: str
     prescriptions: list[Prescription] = []
 
     class Config:
@@ -72,9 +77,10 @@ class Provider(ProviderBase):
 
 class Medication(BaseModel):
     name: str
-    common_name: str
-    manufacturer: str
+    rxcui: str
     id: int
+    app_type: str
+    amount: str
 
     class Config:
         orm_mode = True

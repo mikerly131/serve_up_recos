@@ -2,6 +2,16 @@
 // so far just medication request has scrips
 // Please oh please gods of coding guide me, I have gone beyond what I know and am making google assisted guesses
 
+// To dynamically show the dose type based on the selected medication
+function updateDoseType() {
+    var selectedMed = document.getElementById('new_med');
+    var displayDoseType = document.getElementById('display_dose_type');
+    var selectedMedDoseType = selectedMed.options[newMedSelect.selectedIndex];
+    var appType = selectedMedDoseType.getAttribute('data-app-type')
+    displayDoseType.innerText = appType;
+}
+
+
 // For medication request, to confirm it after seeing issues
 function confirmRequest() {
     alert('Confirmed Medication Request!');
