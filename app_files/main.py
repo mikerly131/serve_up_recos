@@ -103,9 +103,19 @@ def start_workflow(request: Request, user_name: str, workflow_name: str,
 
 # PATH - POST: Submit medication request, get back issues for drug-drug interactions and show them
 @app.post("/encounter/medication_request")
-def medication_request(request: Request, user_name: str,
-                       patient_id: UUID, new_med: int, db: Session = Depends(get_db)):
-    mr_id = crud.make_medication_request(db, patient_id, user_name, new_med)
+def medication_request(request: Request, user_name: str, patient_id: UUID,
+                       mr_form_data: schemas.MedicationRequest = Form(...), db: Session = Depends(get_db)):
+    new_med = mr_form_data.new_medication
+    med_name = mr_form_data.med_name
+    new_market_med = mr_form_data.new_market_med
+    brand_name = mr_form_data.brand_name
+    dose_amount = mr_form_data.dose_amount
+    enternal_route = mr_form_data.enternal_route
+    frequency = mr_form_data.frequency
+    duration = mr_form_data.duration
+
+    mr_id = crud.make_medication_request(db, patient_id, user_name, new_med, med_name, new_market_med, brand_name,
+                                         dose_amount, enternal_route, frequency, duration)
     issue_list = crud.serve_ddi_issues(db, mr_id)
     workflow_data = crud.get_workflow_data(db, patient_id)
     patient = workflow_data[0]

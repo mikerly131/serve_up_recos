@@ -43,7 +43,7 @@ class Provider(Base):
     org = Column(String(length=50))
 
 
-# Prescription has a patient, provider, medication, medication instance, dosage, dose type, frequence, duration
+# Prescription has a patient, provider, medication, medication instance, dosage, dose type, frequency, duration
 # MVP: Just using the medication, not market instance?
 # Future: Want to use market available instances of medication (dose amount, type already set not user entered)
 class Prescription(Base):

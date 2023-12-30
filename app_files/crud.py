@@ -80,14 +80,22 @@ def get_medications(db: Session):
 
 
 # Function to make a medication request on form submission
-def make_medication_request(db: Session, patient_id: UUID, user_name: str, new_med: int):
+def make_medication_request(db: Session, patient_id: UUID, user_name: str, new_med, med_name, new_market_med,
+                            brand_name, dose_amount, enternal_route, frequency, duration):
     provider_id = get_provider_id(db, user_name)
 
     # Create a new MedicationRequest
     medication_request = models.MedicationRequest(
         patient_id=patient_id,
         provider_id=provider_id,
-        new_medication=new_med
+        new_medication=new_med,
+        med_name=med_name,
+        new_market_med=new_market_med,
+        brand_name=brand_name,
+        dose_amount=dose_amount,
+        enternal_route=enternal_route,
+        frequency=frequency,
+        duration=duration
     )
 
     db.add(medication_request)
@@ -106,7 +114,7 @@ def serve_ddi_issues(db: Session, mr_id: int):
     issue_list = []
     for med in current_meds:
         # get issues for med and new_med
-        issues = get_ddi_issues(db, mr.new_med, med)
+        issues = get_ddi_issue(db, mr.new_med, med)
         # if there are issues, get the issues and put them in the issue list
         if issues:
             for issue in issues:
@@ -115,19 +123,18 @@ def serve_ddi_issues(db: Session, mr_id: int):
 
 
 # Helper function for the serve_ddi_issues to return top 3 issues by severity
-def get_ddi_issues(db: Session, med1: int, med2: int):
+def get_ddi_issue(db: Session, med1: int, med2: int):
     interaction = db.query(models.Interaction).filter(models.Interaction.medication1 == med1,
                                                       models.Interaction.medication2 == med2).first()
-    ddi_issues = interaction.issues
-    return ddi_issues
+    ddi_issue = interaction.issue_description
+    return ddi_issue
 
 
 # Helper function for medication request to return predictions of drug-drug interactions (ddi)
-def make_ddi_predictions(db: Session, mr_id: int):
-    pass
+# def make_ddi_predictions(db: Session, mr_id: int):
+#     pass
 
 
 # Function to place a medication order for the medication request workflow
-def make_medication_order():
-    pass
-
+# def make_medication_order():
+#     pass
