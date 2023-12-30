@@ -13,12 +13,19 @@ import json
 
 
 # Insert prescriptions
-# I'll need the patient ids in order to do this.
+# Make sure prescriptions.json includes the patient IDs.
 def populate_prescriptions(db: Session):
-    prescriptions = [
-        Prescription(medication_id=1, medication_name="", dosage="", dose_type="", patient_id="", provider_id=None)
-    ]
-    db.add_all(prescriptions)
+
+    with open('/Users/mike/projects/serve_up_recos/drug_data/prescriptions.json', 'r') as file:
+        prescriptions = json.load(file)
+
+    for med in prescriptions:
+        db.execute(
+            insert(Prescription).values(medication_id=med['medication_id'], medication_name=med['medication_name'], market_med_id=med['market_med_id'],
+                                        brand_name=med['brand_name'], dose_amount=med['dose_amount'], enternal_route=med['enternal_route'],
+                                        frequency=med['frequency'], patient_id=med['patient_id'], provider_id=med['provider_id'])
+        )
+
     db.commit()
 
 
