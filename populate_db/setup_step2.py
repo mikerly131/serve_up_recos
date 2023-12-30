@@ -30,7 +30,7 @@ def populate_prescriptions(db: Session):
 
 
 if __name__ == "__main__":
-    db_url = 'sqlite:///./sql_app.db'
+    db_url = 'sqlite:///../sql_app.db'
     engine = create_engine(db_url)
     my_db = Session(bind=engine)
     populate_prescriptions(my_db)

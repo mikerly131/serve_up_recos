@@ -55,7 +55,7 @@ def populate_medications(db: Session):
 
 def populate_marketed_medications(db: Session):
     # Insert marketed medications (brand names) associated with each general medication
-    with open('/Users/mike/projects/serve_up_recos/drug_data/medication_list_branded.json', 'r') as file:
+    with open('/Users/mike/projects/serve_up_recos/drug_data/deduped_meds.json', 'r') as file:
         drugs_data = json.load(file)
 
     for med in drugs_data:
