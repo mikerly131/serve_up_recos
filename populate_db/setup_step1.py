@@ -7,17 +7,16 @@ Then, run this script before restarting.  Only do this 1x unless DB is lost.
 from datetime import date
 from sqlalchemy.orm import Session
 from sqlalchemy import insert, create_engine, select, column
-from app_files.models import Patient, Medication, MarketMedication, Prescription, Interaction, Issue
+from app_files.models import Patient, Medication, MarketMedication, Interaction
 import json
 
 
 # Table population order: Patient, Medication, Prescription, Interaction, Issue
-# To populate Prescription Table with patient prescriptions for initial load, create with NULL provider id explicit
 
 # Source Data:
 # medication_list_branded has the generic name, branded name, and rxcui for a medication
 
-def populate_data(db: Session):
+def populate_patients(db: Session):
 
     # Insert patients
     patients = [
@@ -41,8 +40,10 @@ def populate_data(db: Session):
     db.commit()
 
 
+def populate_medications(db: Session):
+
     # Insert medications
-    #At some point use proper path, and import os if needed
+    # At some point use proper path, and import os if needed
     with open('/Users/mike/projects/serve_up_recos/drug_data/medication_list.json', 'r') as file:
         drug_data = json.load(file)
 
@@ -53,6 +54,7 @@ def populate_data(db: Session):
     db.commit()
 
 
+def populate_marketed_medications(db: Session):
     # Insert marketed medications (brand names) associated with each general medication
     with open('/Users/mike/projects/serve_up_recos/drug_data/medication_list_branded.json', 'r') as file:
         drugs_data = json.load(file)
@@ -68,17 +70,21 @@ def populate_data(db: Session):
     db.commit()
 
 
+def populate_interactions(db: Session):
+
     # Insert interactions, a reference table that links two medications.
     # Source file already has the 2 rows needed (dicts) - 2nd row swaps medication ids
     with open('/Users/mike/projects/serve_up_recos/drug_data/all_interactions.json', 'r') as file:
         interactions = json.load(file)
 
     for interaction in interactions:
-            db.execute(
-                insert(Interaction).values(medication_1=interaction['medication_1'], medication_2=interaction['medication_2'], issue_description=interaction['description'])
-            )
+        db.execute(
+            insert(Interaction).values(medication_1=interaction['medication_1'], medication_2=interaction['medication_2'], issue_description=interaction['description'])
+        )
     db.commit()
 
+
+# def populate_issues(db: Session):
     # Insert issues for the interactions.
     # For now insert it under each interaction ID for a medication pair - so once with each ID.
     # Severities:  harmless, moderate, severe, deadly
@@ -89,16 +95,12 @@ def populate_data(db: Session):
     # db.add_all(issues)
     # db.commit()
 
-    # Insert prescriptions
-    prescriptions = [
-        Prescription(medication_id=, medication_name="", dosage="", dose_type="", patient_id="", provider_id=None)
-    ]
-    db.add_all(prescriptions)
-    db.commit()
-
-
 if __name__ == "__main__":
     db_url = 'sqlite:///./sql_app.db'
     engine = create_engine(db_url)
     my_db = Session(bind=engine)
-    populate_data(my_db)
+    populate_patients(my_db)
+    populate_medications(my_db)
+    populate_marketed_medications(my_db)
+    populate_interactions(my_db)
+    # populate_issues(my_db)

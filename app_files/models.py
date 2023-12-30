@@ -61,6 +61,8 @@ class Prescription(Base):
     patient_id = Column(String, ForeignKey("patients.id"))
     provider_id = Column(String, ForeignKey("providers.id"))
 
+    patient = relationship("Patient", back_populates="prescriptions")
+
 
 # Medications are used in 0 to many prescriptions (maybe just reference, see MVP note)
 # MVP: My idea is this table is for the generic medication concept, not manufactured instances of it.
@@ -71,7 +73,7 @@ class Medication(Base):
     rxcui = Column(Integer, primary_key=True, index=True)
     generic_name = Column(String(length=100))
 
-    market_instances = relationship("MarketMedication", back_populates="medications")
+    market_instances = relationship("MarketMedication", back_populates="medication")
 
 
 # Without having to serialize or use NoSQL, can store 0 to many manufactured instances of a medication.
@@ -83,6 +85,8 @@ class MarketMedication(Base):
     id = Column(Integer, primary_key=True, index=True)
     medication_id = Column(Integer, ForeignKey('medications.rxcui'))
     brand_name = Column(String)
+
+    medication = relationship("Medication", back_populates="market_instances")
 
 
 # Interactions limited to 2 medications, not market instances (Data sourcing issues)
@@ -131,7 +135,7 @@ class MedicationRequest(Base):
     provider_id = Column(String, ForeignKey("providers.id"))
     request_dt = Column(DateTime, default=datetime.utcnow)
     current_medication_ids = Column(String)
-    new_medication = Column(Integer, ForeignKey('medications.id'))
+    new_medication = Column(Integer, ForeignKey('medications.rxcui'))
     med_name = Column(String)
     new_market_med = Column(Integer, ForeignKey('market_medications.id'))
     brand_name = Column(String)

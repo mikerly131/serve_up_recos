@@ -60,18 +60,21 @@ class Patient(BaseModel):
 
 
 class Provider(BaseModel):
-    id: UUID4
     given_name: str
     family_name: str
     org: str
     user_name: str
 
-    class Config:
-        orm_mode = True
-
 
 class ProviderCreate(Provider):
     password: str
+
+
+class ProviderRead(Provider):
+    id: UUID4
+
+    class Config:
+        orm_mode = True
 
 
 class MarketMedication(BaseModel):
@@ -122,7 +125,7 @@ class MedicationRequest(BaseModel):
     request_dt: datetime = Field(default_factory=datetime.utcnow)
     current_medication_ids: str
     new_medication: int
-    med_name = str
+    med_name: str
     new_market_med: int
     brand_name: str
     dose_amount: str
