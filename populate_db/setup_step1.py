@@ -1,8 +1,7 @@
 """
-File to populate db with necessary data.
+First script in process to populate the DB prior to application use.
 DB and tables need to exist first (start then stop app if needed)
-Then, run this script before restarting.  Only do this 1x unless DB is lost.
-
+Then, run this script before restarting again.  Only do this 1x unless DB is lost.
 """
 from datetime import date
 from sqlalchemy.orm import Session
@@ -49,7 +48,7 @@ def populate_medications(db: Session):
 
     for drug in drug_data:
         db.execute(
-            insert(Medication).values(name=drug['name'], rxcui=drug['rxcui'])
+            insert(Medication).values(generic_name=drug['generic_name'], rxcui=drug['rxcui'])
         )
     db.commit()
 
@@ -61,7 +60,10 @@ def populate_marketed_medications(db: Session):
 
     for med in drugs_data:
         rxcui = med['rxcui']
-        med_id = db.execute(select(column(Medication.id)).where(column(Medication.rxcui) == rxcui)).fetchone()
+        # med_id_from_db = db.execute(select(column(Medication.rxcui)).where(column(Medication.rxcui) == rxcui)).fetchone()
+        # med_id = med_id_from_db[0]
+        medication = db.query(Medication).filter(Medication.rxcui == rxcui).first()
+        med_id = medication.rxcui
 
         for name in med["brand_name"]:
             db.execute(
@@ -79,7 +81,7 @@ def populate_interactions(db: Session):
 
     for interaction in interactions:
         db.execute(
-            insert(Interaction).values(medication_1=interaction['medication_1'], medication_2=interaction['medication_2'], issue_description=interaction['description'])
+            insert(Interaction).values(medication_1=interaction['medication1'], medication_2=interaction['medication2'], issue_description=interaction['description'])
         )
     db.commit()
 
@@ -96,7 +98,7 @@ def populate_interactions(db: Session):
     # db.commit()
 
 if __name__ == "__main__":
-    db_url = 'sqlite:///./sql_app.db'
+    db_url = 'sqlite:///../sql_app.db'
     engine = create_engine(db_url)
     my_db = Session(bind=engine)
     populate_patients(my_db)

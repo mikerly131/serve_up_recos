@@ -97,8 +97,8 @@ class Interaction(Base):
     __tablename__ = "interactions"
 
     id = Column(Integer, primary_key=True, index=True)
-    medication1 = Column(Integer, ForeignKey('medications.rxcui'))
-    medication2 = Column(Integer, ForeignKey('medications.rxcui'))
+    medication_1 = Column(Integer, ForeignKey('medications.rxcui'))
+    medication_2 = Column(Integer, ForeignKey('medications.rxcui'))
     issue_description = Column(String)
 
 #    issues = relationship('Issue', back_populates='interactions')
