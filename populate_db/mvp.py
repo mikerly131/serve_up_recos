@@ -6,13 +6,17 @@ Then, run this script before restarting.  Only do this 1x unless DB is lost.
 """
 from datetime import date
 from sqlalchemy.orm import Session
-from sqlalchemy import insert, create_engine
-from app_files.models import Patient, Medication, Prescription, Interaction, Issue
+from sqlalchemy import insert, create_engine, select, column
+from app_files.models import Patient, Medication, MarketMedication, Prescription, Interaction, Issue
 import json
 
 
 # Table population order: Patient, Medication, Prescription, Interaction, Issue
 # To populate Prescription Table with patient prescriptions for initial load, create with NULL provider id explicit
+
+# Source Data:
+# medication_list_branded has the generic name, branded name, and rxcui for a medication
+
 def populate_data(db: Session):
 
     # Insert patients
@@ -36,36 +40,60 @@ def populate_data(db: Session):
     db.add_all(patients)
     db.commit()
 
+
     # Insert medications
-    medications = [
-        Medication(name="Tylenol", rxcui=)
-    ]
-    db.add_all(prescriptions)
+    #At some point use proper path, and import os if needed
+    with open('/Users/mike/projects/serve_up_recos/drug_data/medication_list.json', 'r') as file:
+        drug_data = json.load(file)
+
+    for drug in drug_data:
+        db.execute(
+            insert(Medication).values(name=drug['name'], rxcui=drug['rxcui'])
+        )
     db.commit()
 
-    # Insert prescriptions
-    prescriptions = [
-        Prescription(medication_id=, medication_name="", dosage="", dose_type="", patient_id="", provider_id=None)
-    ]
-    db.add_all(prescriptions)
+
+    # Insert marketed medications (brand names) associated with each general medication
+    with open('/Users/mike/projects/serve_up_recos/drug_data/medication_list_branded.json', 'r') as file:
+        drugs_data = json.load(file)
+
+    for med in drugs_data:
+        rxcui = med['rxcui']
+        med_id = db.execute(select(column(Medication.id)).where(column(Medication.rxcui) == rxcui)).fetchone()
+
+        for name in med["brand_name"]:
+            db.execute(
+                insert(MarketMedication).values(medication_id=med_id, brand_name=name)
+            )
     db.commit()
+
 
     # Insert interactions, a reference table that links two medications.
-    # For now, insert the pair twice, once in each order.
-    interactions = [
-        Interaction(medication1= , medication2= )
-    ]
-    db.add_all(interactions)
+    # Source file already has the 2 rows needed (dicts) - 2nd row swaps medication ids
+    with open('/Users/mike/projects/serve_up_recos/drug_data/all_interactions.json', 'r') as file:
+        interactions = json.load(file)
+
+    for interaction in interactions:
+            db.execute(
+                insert(Interaction).values(medication_1=interaction['medication_1'], medication_2=interaction['medication_2'], issue_description=interaction['description'])
+            )
     db.commit()
 
     # Insert issues for the interactions.
     # For now insert it under each interaction ID for a medication pair - so once with each ID.
     # Severities:  harmless, moderate, severe, deadly
     # Probability Types: unlikely, low, even_chance, likely, certain
-    issues = [
-        Issue(interaction_id= , issue_severity="severe" , issue_warning=" ", probability=0.0, probability_type="unlikely")
+    # issues = [
+    #     Issue(interaction_id= , issue_severity="severe" , issue_warning=" ", probability=0.0, probability_type="unlikely")
+    # ]
+    # db.add_all(issues)
+    # db.commit()
+
+    # Insert prescriptions
+    prescriptions = [
+        Prescription(medication_id=, medication_name="", dosage="", dose_type="", patient_id="", provider_id=None)
     ]
-    db.add_all(issues)
+    db.add_all(prescriptions)
     db.commit()
 
 

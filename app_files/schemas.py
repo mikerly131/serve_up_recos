@@ -10,44 +10,47 @@ from enum import Enum
 
 
 # Enum for drug-drug interaction severity
-class IssueSeverity(str, Enum):
-    HARMLESS = 'harmless'
-    MODERATE = 'moderate'
-    SEVERE = 'severe'
-    DEADLY = 'deadly'
+# class IssueSeverity(str, Enum):
+#     HARMLESS = 'harmless'
+#     MODERATE = 'moderate'
+#     SEVERE = 'severe'
+#     DEADLY = 'deadly'
 
 
 # Enum for drug-drug interaction chance of happening, probability ranges.
-class ProbabilityType(str, Enum):
-    UNLIKELY = 'unlikely'  # 0.0-0.15
-    LOW = 'low'  # 0.16-0.40
-    EVEN_CHANCE = 'even_chance'  # .41-.60
-    LIKELY = 'likely'   # .61-.90
-    CERTAIN = 'certain'  # .91-1.0
+# class ProbabilityType(str, Enum):
+#     UNLIKELY = 'unlikely'  # 0.0-0.15
+#     LOW = 'low'  # 0.16-0.40
+#     EVEN_CHANCE = 'even_chance'  # .41-.60
+#     LIKELY = 'likely'   # .61-.90
+#     CERTAIN = 'certain'  # .91-1.0
 
 
 class Prescription(BaseModel):
+    id: int
+    medication_id: int
+    medication_name: str
+    market_med_id: int
+    brand_name: str
     dose_amount: str
-    dose_type: str
+    enternal_route: str
     frequency: str
     duration: str
     patient_id: UUID4
     provider_id: UUID4
-    medication_id: int
-    medication_name: str
-    id: int
 
     class Config:
         orm_mode = True
 
 
 class Patient(BaseModel):
+    id: UUID4
     given_name: str
+    preferred_name: str
     family_name: str
     dob: date
     height_ins: int
     weight_lbs: int
-    id: UUID4
     bio_gender: str
     gender_identity: str
     prescriptions: list[Prescription] = []
@@ -56,89 +59,94 @@ class Patient(BaseModel):
         orm_mode = True
 
 
-class ProviderBase(BaseModel):
+class Provider(BaseModel):
+    id: UUID4
     given_name: str
     family_name: str
     org: str
     user_name: str
 
+    class Config:
+        orm_mode = True
 
-class ProviderCreate(ProviderBase):
+
+class ProviderCreate(Provider):
     password: str
 
 
-class Provider(ProviderBase):
-    id: UUID4
-    prescriptions: list[Prescription] = []
+class MarketMedication(BaseModel):
+    id: int
+    medication_id: int
+    brand_name: str
 
     class Config:
         orm_mode = True
 
 
 class Medication(BaseModel):
-    name: str
-    rxcui: str
-    id: int
-    app_type: str
-    amount: str
+    rxcui: int
+    generic_name: str
+    market_instances: list[MarketMedication] = []
 
     class Config:
         orm_mode = True
 
 
-class Issue(BaseModel):
-    issue_severity: IssueSeverity
-    issue_warning: str
-    probability_type: ProbabilityType
-    probability: float
-    id: int
-    interaction_id: int
-
-    class Config:
-        orm_mode = True
+# MVP:  Ditching idea, no sourcing for issue data
+# class Issue(BaseModel):
+#     issue_severity: IssueSeverity
+#     issue_warning: str
+#     probability_type: ProbabilityType
+#     probability: float
+#     id: int
+#     interaction_id: int
+#
+#     class Config:
+#         orm_mode = True
 
 
 class Interaction(BaseModel):
+    id: int
     medication1: int
     medication2: int
-    id: int
-    issues: list[Issue] = []
+    # issues: list[Issue] = []
 
     class Config:
         orm_mode = True
 
 
-class MedicationRequestBase(BaseModel):
+class MedicationRequest(BaseModel):
+    id: int
     patient_id: UUID4
     provider_id: UUID4
     request_dt: datetime = Field(default_factory=datetime.utcnow)
-    new_medication: int
-
-
-class MedicationRequestCreate(MedicationRequestBase):
-    pass
-
-
-class MedicationRequest(MedicationRequestBase):
-    id: int
     current_medication_ids: str
+    new_medication: int
+    med_name = str
+    new_market_med: int
+    brand_name: str
+    dose_amount: str
+    enternal_route: str
+    frequency: str
+    duration: str
 
     class Config:
         orm_mode = True
 
 
-class PredictionBase(BaseModel):
-    interaction_issues_list: str
-    medication_request_id: int
-    request_dt: datetime = Field(default_factory=datetime.utcnow)
-
-
-class PredictionCreate(PredictionBase):
-    pass
-
-
-class Prediction(PredictionBase):
-    id: int
-
-    class Config:
-        orm_mode = True
+# MVP: No AI integrations, ditching for MVP
+# class PredictionBase(BaseModel):
+#     interaction_issues_list: str
+#     medication_request_id: int
+#     request_dt: datetime = Field(default_factory=datetime.utcnow)
+#
+#
+# class PredictionCreate(PredictionBase):
+#     pass
+#
+#
+# class Prediction(PredictionBase):
+#     id: int
+#
+#     class Config:
+#         orm_mode = True

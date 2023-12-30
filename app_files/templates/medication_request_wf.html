@@ -79,8 +79,8 @@
             <label for="new_med">Medication:</label>
             <select name="new_med" id="new_med" required onchange="updateDoseType()">
                 {% for medication in medications %}
-                <option value="{{ medication.name }}" data-app-type="{{ medication.app_type }}">
-                    {{ medication.name }} {{ medication.app_type }} {{ medication.amount }}
+                <option value="{{ medication.rxcui }}" data-app-type="{{ medication.app_type }}">
+                    {{ medication.generic_name }}
                 </option>
                 {% endfor %}
             </select><br>
