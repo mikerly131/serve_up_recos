@@ -2,10 +2,11 @@
 FastAPI version of serveUpRecos
 
 
-# Open Source (MIT/Apache Licensed)
-Check out LICENSE.md for information on code I utilized that is provided free of charge and its licensing.
+# Open Source Used (MIT/Apache Licensed)
+Check out NOTICE.md for information on code I utilized that is provided free of charge and its licensing.
+
+# Works Cited
+Check out NOTICE.md for citations on sources of data for this project.
 
 
-# Citations
-Generic Names for prescribable medications were sourced from ClinCalc.
-Kane SP. ClinCalc DrugStats Database, Version 2022.08. ClinCalc: https://clincalc.com/DrugStats. Updated August 24, 2022. Accessed December 26, 2023.
+
