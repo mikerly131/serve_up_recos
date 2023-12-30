@@ -26,19 +26,20 @@
     <!-- Section: Patient Medical Info -->
     <section class="patient_med_info">
     <h3> Prescriptions: </h3>
-        {% if patient.prescriptions %}
-            {% for prescription in patient.prescriptions %}
-            <ul>
-                <li>{{ prescription.medication_name }}</li>
-                <li>{{ prescription.dose_type }}</li>
-                <li>{{ prescription.dose_amount }}</li>
-                <li>{{ prescription.frequency }}</li>
-            </ul>
-            {% endfor %}
-        {% else % }
-            <p>No Prescriptions</p>
-        {% endif %}
-    <br>
+        {{ patient.prescriptions }}
+<!--        {% if patient.prescriptions %}-->
+<!--            {% for prescription in patient.prescriptions %}-->
+<!--            <ul>-->
+<!--                <li>{{ prescription.medication_name }}</li>-->
+<!--                <li>{{ prescription.enternal_route }}</li>-->
+<!--                <li>{{ prescription.dose_amount }}</li>-->
+<!--                <li>{{ prescription.frequency }}</li>-->
+<!--            </ul>-->
+<!--            {% endfor %}-->
+<!--        {% else %}-->
+<!--            <p>No Prescriptions</p>-->
+<!--        {% endif %}-->
+<!--    <br>-->
     <!-- Add this section after MVP
     <h3> Conditions: </h3>
         {% if patient.conditions %}
@@ -49,7 +50,7 @@
                 <li>{{ condition.description }}</li>
             </ul>
             {% endfor %}
-        {% else % }
+        {% else %}
             <p>No Diagnosed Conditions</p>
         {% endif %}
     <br>
@@ -62,7 +63,7 @@
                 <li>{{ allergy.does_type }}</li>
             </ul>
             {% endfor %}
-        {% else % }
+        {% else %}
             <p>No Prescriptions</p>
         {% endif %}
         -->
@@ -77,16 +78,16 @@
             <input type="hidden" name="user_name" value="{{ user_name }}">
             <input type="hidden" name="patient_id" value="{{ patient_id }}">
             <label for="new_med">Medication:</label>
-            <select name="new_med" id="new_med" required onchange="updateDoseType()">
+            <select name="new_med" id="new_med" required>
                 {% for medication in medications %}
-                <option value="{{ medication.rxcui }}" data-app-type="{{ medication.app_type }}">
+                <option value="{{ medication.rxcui }}">
                     {{ medication.generic_name }}
                 </option>
                 {% endfor %}
             </select><br>
+            Enternal Route: <input type="text" name="enternal_route" required><br>
             Dosage: <input type="text" name="dosage" required><br>
             Frequency: <input type="text" name="frequency" required><br>
-            Dose Type: <span id="display_dose_type"></span><br>
             Duration: <input type="text" name="duration"><br>
             <button id="submitBtn" type="submit">Submit Request</button>
         </form>
@@ -108,6 +109,6 @@
     <button id="redoBtn" class="hidden" type="button" onclick="redoRequest()">Redo Request</button>
 
     <!-- JS to hide/unhide buttons after form submission, redirect user on confirmation -->
-    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+    <script src="{{ url_for('static', path='scripts.js') }}"></script>
 </body>
 </html>

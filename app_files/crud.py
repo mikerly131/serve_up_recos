@@ -4,7 +4,7 @@ For this project's MVP, might only need Create and Read
 """
 from uuid import UUID
 
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from . import models, schemas
 
 
@@ -52,7 +52,7 @@ def get_patients(db: Session):
 
 
 # Function to get all the data to populate an encounter workflow form
-def get_workflow_data(db: Session, patient_id: UUID):
+def get_workflow_data(db: Session, patient_id: str):
     patient_details = get_patient_details(db, patient_id)
     medications = get_medications(db)
     workflow_data = [patient_details, medications]
@@ -60,8 +60,8 @@ def get_workflow_data(db: Session, patient_id: UUID):
 
 
 # Helper function to get patient details to display in the encounter workflow form
-def get_patient_details(db: Session, patient_id: UUID):
-    patient_details = db.query(models.Patient).filter(models.Patient.id == patient_id).first()
+def get_patient_details(db: Session, patient_id: str):
+    patient_details = db.query(models.Patient).options(joinedload(models.Patient.prescriptions)).filter(models.Patient.id == patient_id).first()
     return patient_details
 
 
@@ -80,7 +80,7 @@ def get_medications(db: Session):
 
 
 # Function to make a medication request on form submission
-def make_medication_request(db: Session, patient_id: UUID, user_name: str, new_med, med_name, new_market_med,
+def make_medication_request(db: Session, patient_id: str, user_name: str, new_med, med_name, new_market_med,
                             brand_name, dose_amount, enternal_route, frequency, duration):
     provider_id = get_provider_id(db, user_name)
 

@@ -14,7 +14,7 @@ from fastapi.templating import Jinja2Templates
 models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/static", StaticFiles(directory="./static"), name="static")
 templates = Jinja2Templates(directory="app_files/templates")
 
 
@@ -90,10 +90,10 @@ def setup_encounter(request: Request, user_name: str, db: Session = Depends(get_
 
 # Path - GET: Start medication request workflow, show patient data,
 # and show their prescriptions and list of meds that can be selected to request
-@app.get("/encounter/medication_request")
-def start_workflow(request: Request, user_name: str, workflow_name: str,
-                   patient_id: UUID, db: Session = Depends(get_db)):
-    if workflow_name == "medication_request":
+@app.post("/encounter/medication_request")
+def start_workflow(request: Request, user_name: str = Form(...), workflow_name: str = Form(...), patient_id: str = Form(...), db: Session = Depends(get_db)):
+
+    if workflow_name == "Medication Request":
         workflow_data = crud.get_workflow_data(db, patient_id)
         patient = workflow_data[0]
         medications = workflow_data[1]
@@ -102,8 +102,8 @@ def start_workflow(request: Request, user_name: str, workflow_name: str,
 
 
 # PATH - POST: Submit medication request, get back issues for drug-drug interactions and show them
-@app.post("/encounter/medication_request")
-def medication_request(request: Request, user_name: str, patient_id: UUID,
+@app.post("/encounter/medication_request/submit")
+def medication_request(request: Request, user_name: str, patient_id: str,
                        mr_form_data: schemas.MedicationRequest = Form(...), db: Session = Depends(get_db)):
     new_med = mr_form_data.new_medication
     med_name = mr_form_data.med_name

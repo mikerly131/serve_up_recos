@@ -2,13 +2,12 @@
 // so far just medication request has scrips
 // Please oh please gods of coding guide me, I have gone beyond what I know and am making google assisted guesses
 
-// To dynamically show the dose type based on the selected medication
-function updateDoseType() {
-    var selectedMed = document.getElementById('new_med');
-    var displayDoseType = document.getElementById('display_dose_type');
-    var selectedMedDoseType = selectedMed.options[newMedSelect.selectedIndex];
-    var appType = selectedMedDoseType.getAttribute('data-app-type')
-    displayDoseType.innerText = appType;
+// Event listener and action url updater for changes to workflow selection
+document.getElementById("select_workflow").addEventListener("change", configureWorkflow)
+function configureWorkflow() {
+        var selectedWorkflow = document.getElementById("select_workflow");
+        var form = document.getElementById("enc_setup");
+        form.action = `/encounter/${selectedWorkflow}`;
 }
 
 

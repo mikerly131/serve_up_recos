@@ -6,16 +6,30 @@
     <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
 </head>
 <body>
-        {% include 'header.html' %}
-        <div class="index-body">
-            <h1>Encounter Setup</h1>
-            <label for="workflow_select">Select a workflow:</label>
-            <select name="workflow_name" id="workflow_select" required>
+    {% include 'header.html' %}
+    <div class="index-body">
+        <h1>Encounter Setup</h1>
+        <form method="post" id="enc_setup" action="/encounter/medication_request" class="form">
+            <input type="hidden" name="user_name" value="{{ provider }}">
+            <label for="select_workflow">Select a workflow:</label>
+            <select name="workflow_name" id="select_workflow" required>
                 {% for workflow in workflows.values() %}
                 <option value="{{ workflow }}">{{ workflow }}</option>
                 {% endfor %}
             </select><br>
-        </div>
+            <label for="select_patient">Select a patient:</label>
+            <select name="patient_id" id="select_patient" required>
+                {% for patient in patients %}
+                <option value="{{ patient.id }}">{{ patient.given_name }} {{ patient.family_name }}</option>
+                {% endfor %}
+            </select><br>
+            <button type="submit" class="submit">
+            Begin Workflow
+            </button>
+        </form>
+    </div>
+
+    <script src="{{ url_for('static', path='scripts.js') }}"></script>
 
 </body>
 </html>

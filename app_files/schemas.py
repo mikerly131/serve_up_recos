@@ -36,15 +36,15 @@ class Prescription(BaseModel):
     enternal_route: str
     frequency: str
     duration: str
-    patient_id: UUID4
-    provider_id: UUID4
+    patient_id: str
+    provider_id: str
 
     class Config:
         orm_mode = True
 
 
 class Patient(BaseModel):
-    id: UUID4
+    id: str
     given_name: str
     preferred_name: str
     family_name: str
@@ -71,7 +71,7 @@ class ProviderCreate(Provider):
 
 
 class ProviderRead(Provider):
-    id: UUID4
+    id: str
 
     class Config:
         orm_mode = True
@@ -120,8 +120,8 @@ class Interaction(BaseModel):
 
 class MedicationRequest(BaseModel):
     id: int
-    patient_id: UUID4
-    provider_id: UUID4
+    patient_id: str
+    provider_id: str
     request_dt: datetime = Field(default_factory=datetime.utcnow)
     current_medication_ids: str
     new_medication: int
