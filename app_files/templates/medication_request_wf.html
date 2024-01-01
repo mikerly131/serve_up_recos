@@ -91,19 +91,19 @@
         <h3>New Medication Request</h3>
 
             <!-- Form for medication request -->
-            <form id="mr_form_data" action="{{ url_for('medication_request') }}" method="post">
-                <input type="hidden" name="user_name" value="{{ user_name }}">
-                <input type="hidden" name="patient_id" value="{{ patient_id }}">
-                <label for="new_med">Medication:</label>
-                <select name="new_med" id="new_med" required>
+            <form action="/encounter/medication_request/submit?user_name={{ provider }}&patient_id={{ patient.id }}" method="post">
+                <label for="new_medication">Medication:</label>
+                <select name="new_medication" id="new_medication" required>
                     {% for medication in medications %}
                     <option value="{{ medication.rxcui }}">
                         {{ medication.generic_name }}
                     </option>
                     {% endfor %}
                 </select><br>
-                Enternal Route: <input type="text" name="enternal_route" required><br>
-                Dosage: <input type="text" name="dosage" required><br>
+                Brand: <input type="text" name="brand_name" required><br>
+                <input type="hidden" name="new_market_med" value="1">
+                Administer By: <input type="text" name="enternal_route" required><br>
+                Dosage: <input type="text" name="dose_amount" required><br>
                 Frequency: <input type="text" name="frequency" required><br>
                 Duration: <input type="text" name="duration"><br>
                 <button id="submitBtn" type="submit">Submit Request</button>

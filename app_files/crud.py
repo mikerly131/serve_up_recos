@@ -88,7 +88,7 @@ def make_medication_request(db: Session, patient_id: str, user_name: str, new_me
     medication_request = models.MedicationRequest(
         patient_id=patient_id,
         provider_id=provider_id,
-        new_medication=new_med,
+        new_medication_id=new_med,
         med_name=med_name,
         new_market_med=new_market_med,
         brand_name=brand_name,

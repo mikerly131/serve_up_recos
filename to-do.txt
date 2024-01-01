@@ -4,6 +4,7 @@
 4. Style the p-prescript and the mr_form_data sections of medication_request_wf.html
 5. Create a logout endpoint, update header link to direct to it. Logout provider and redirect to login on click.
 6. Create a profile endpoint, update header to direct ot it. Redirect to profile on click.
+7. Write test - start with root/index, then figuring out how to mock db.
 
 
 Figure out the issue causing current error on submitting mr_form_data:

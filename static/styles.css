@@ -12,6 +12,7 @@ body {
     margin: auto;
 }
 
+/* For medication request - make patient info and prescription sections align horizontally */
 .index-body-two {
     font-family: Palatino, "URW Palladio L", Trebuchet, serif;
     line-height: 1.6;
@@ -149,6 +150,7 @@ h1 {
 
 /* This section is for styling the medication request (mr) template */
 
+/* This is to make the h3 titles for patient and prescription section align above each section */
 .section_heading {
     display: flex;
     flex-direction: column;

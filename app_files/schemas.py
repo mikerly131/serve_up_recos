@@ -6,6 +6,7 @@ Notice:  Only providers, medication requests and predictions can be created by A
 """
 from pydantic import BaseModel, UUID4, Field
 from datetime import date, datetime
+from typing import Optional
 from enum import Enum
 
 
@@ -119,13 +120,13 @@ class Interaction(BaseModel):
 
 
 class MedicationRequest(BaseModel):
-    id: int
-    patient_id: str
-    provider_id: str
+    id: Optional[int]
+    patient_id: Optional[str]
+    provider_id: Optional[str]
     request_dt: datetime = Field(default_factory=datetime.utcnow)
-    current_medication_ids: str
-    new_medication: int
-    med_name: str
+    current_medication_ids: Optional[str]
+    new_medication_id: int
+    med_name: Optional[str]
     new_market_med: int
     brand_name: str
     dose_amount: str
