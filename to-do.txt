@@ -1,0 +1,45 @@
+1. Update enternal_route to be something like "administer_by".  Will require model, schema, crud, main updates and DB reload.
+2. Update the prescription_list.json for DB setup.  Need to get the accurate patient ids.  Do after #1.
+3. See notes below on mr_form_data submit errors...
+4. Style the p-prescript and the mr_form_data sections of medication_request_wf.html
+5. Create a logout endpoint, update header link to direct to it. Logout provider and redirect to login on click.
+6. Create a profile endpoint, update header to direct ot it. Redirect to profile on click.
+
+
+Figure out the issue causing current error on submitting mr_form_data:
+
+{
+  "detail": [
+    {
+      "type": "missing",
+      "loc": [
+        "query",
+        "user_name"
+      ],
+      "msg": "Field required",
+      "input": null,
+      "url": "https://errors.pydantic.dev/2.5/v/missing"
+    },
+    {
+      "type": "missing",
+      "loc": [
+        "query",
+        "patient_id"
+      ],
+      "msg": "Field required",
+      "input": null,
+      "url": "https://errors.pydantic.dev/2.5/v/missing"
+    },
+    {
+      "type": "missing",
+      "loc": [
+        "body",
+        "mr_form_data"
+      ],
+      "msg": "Field required",
+      "input": null,
+      "url": "https://errors.pydantic.dev/2.5/v/missing"
+    }
+  ]
+}
+
