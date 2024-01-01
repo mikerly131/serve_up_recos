@@ -103,19 +103,15 @@ def start_workflow(request: Request, user_name: str = Form(...), workflow_name: 
 
 # PATH - POST: Submit medication request, get back issues for drug-drug interactions and show them
 @app.post("/encounter/medication_request/submit")
-def medication_request(request: Request, user_name: str, patient_id: str,
-                       mr_form_data: dict = Form(...), db: Session = Depends(get_db)):
+def medication_request(request: Request, user_name: str, patient_id: str, new_medication: str = Form(...), new_market_med: str = Form(...),
+                       brand_name: str = Form(...), dose_amount: str = Form(...), enternal_route: str = Form(...), frequency: str = Form(...),
+                       duration: str = Form(...), db: Session = Depends(get_db)):
 
-    new_med = int(mr_form_data.get("new_medication"))
+    new_medication = int(new_medication)
     med_name = "test"
-    new_market_med = int(mr_form_data.get("new_market_med"))
-    brand_name = mr_form_data.get("brand_name")
-    dose_amount = mr_form_data.get("dose_amount")
-    enternal_route = mr_form_data.get("enternal_route")
-    frequency = mr_form_data.get("frequency")
-    duration = mr_form_data.get("duration")
+    new_market_med = int(new_market_med)
 
-    mr_id = crud.make_medication_request(db, patient_id, user_name, new_med, med_name, new_market_med, brand_name,
+    mr_id = crud.make_medication_request(db, patient_id, user_name, new_medication, med_name, new_market_med, brand_name,
                                          dose_amount, enternal_route, frequency, duration)
     issue_list = crud.serve_ddi_issues(db, mr_id)
     workflow_data = crud.get_workflow_data(db, patient_id)
@@ -128,7 +124,7 @@ def medication_request(request: Request, user_name: str, patient_id: str,
         "user_name": user_name,
         "patient": patient,
         "medications": medications,
-        "new_med": new_med,
+        "new_med": new_medication,
         "issue_list": issue_list,
     }
     return templates.TemplateResponse(template_name, template_context)

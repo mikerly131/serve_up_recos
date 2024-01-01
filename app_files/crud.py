@@ -80,7 +80,7 @@ def get_medications(db: Session):
 
 
 # Function to make a medication request on form submission
-def make_medication_request(db: Session, patient_id: str, user_name: str, new_med, med_name, new_market_med,
+def make_medication_request(db: Session, patient_id: str, user_name: str, new_medication, med_name, new_market_med,
                             brand_name, dose_amount, enternal_route, frequency, duration):
     provider_id = get_provider_id(db, user_name)
 
@@ -88,7 +88,7 @@ def make_medication_request(db: Session, patient_id: str, user_name: str, new_me
     medication_request = models.MedicationRequest(
         patient_id=patient_id,
         provider_id=provider_id,
-        new_medication_id=new_med,
+        new_medication=new_medication,
         med_name=med_name,
         new_market_med=new_market_med,
         brand_name=brand_name,
@@ -108,13 +108,13 @@ def make_medication_request(db: Session, patient_id: str, user_name: str, new_me
 # Function to get the drug-drug interaction issues for a medication request
 def serve_ddi_issues(db: Session, mr_id: int):
     # get the medication reqeust
-    mr = db.query(models.MedicationRequest).filter(models.Medication.id == mr_id).first()
+    mr = db.query(models.MedicationRequest).filter(models.MedicationRequest.id == mr_id).first()
     # loop through each current medications
     current_meds = list(map(int, mr.current_medication_ids.split()))
     issue_list = []
     for med in current_meds:
         # get issues for med and new_med
-        issues = get_ddi_issue(db, mr.new_med, med)
+        issues = get_ddi_issue(db, mr.new_medication, med)
         # if there are issues, get the issues and put them in the issue list
         if issues:
             for issue in issues:
@@ -124,8 +124,8 @@ def serve_ddi_issues(db: Session, mr_id: int):
 
 # Helper function for the serve_ddi_issues to return top 3 issues by severity
 def get_ddi_issue(db: Session, med1: int, med2: int):
-    interaction = db.query(models.Interaction).filter(models.Interaction.medication1 == med1,
-                                                      models.Interaction.medication2 == med2).first()
+    interaction = db.query(models.Interaction).filter(models.Interaction.medication_1 == med1,
+                                                      models.Interaction.medication_2 == med2).first()
     ddi_issue = interaction.issue_description
     return ddi_issue
 

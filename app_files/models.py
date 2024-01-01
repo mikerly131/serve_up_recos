@@ -154,7 +154,7 @@ class MedicationRequest(Base):
         )
 
         # Save the medication IDs as a comma-separated string
-        medication_ids = [prescription.medication_id for prescription in prescriptions]
+        medication_ids = [str(prescription.medication_id) for prescription in prescriptions]
         self.current_medication_ids = ",".join(medication_ids)
 
     # Get the medication IDs for a medication request as a list of ints - ids type in medication table

@@ -125,7 +125,7 @@ class MedicationRequest(BaseModel):
     provider_id: Optional[str]
     request_dt: datetime = Field(default_factory=datetime.utcnow)
     current_medication_ids: Optional[str]
-    new_medication_id: int
+    new_medication: int
     med_name: Optional[str]
     new_market_med: int
     brand_name: str
