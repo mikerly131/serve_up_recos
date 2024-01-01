@@ -124,7 +124,7 @@ def medication_request(request: Request, user_name: str, patient_id: str, new_me
         "user_name": user_name,
         "patient": patient,
         "medications": medications,
-        "new_med": new_medication,
+        "new_med_name": med_name,
         "issue_list": issue_list,
     }
     return templates.TemplateResponse(template_name, template_context)

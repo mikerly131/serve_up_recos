@@ -121,8 +121,8 @@
 
             <!-- After request, display drug-drug interaction issues -->
             {% if issue_list %}
-                <h2>Drug Interactions: Top Issues</h2>
-                <h3>New Medication: {{ new_med }} </h3>
+                <h2>Drug Interactions Issues:</h2>
+                <h3>New Medication: {{ new_med_name }} </h3>
                 <ul>
                     {% for issue in issue_list %}
                         <li>{{ issue }}</li>
