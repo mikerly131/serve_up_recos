@@ -8,12 +8,20 @@
         .hidden {
             display: none;
         }
+        .mr-container {
+            padding-left: 20px;
+            padding-top: 20px;
+        }
+        .mr-container h1 {
+            font-family: Palatino, "URW Palladio L", Verdana, serif;
+            font-weight: bold;
+            margin: 0;
+        }
     </style>
 </head>
 <body>
     {% include 'header.html' %}
-
-    <div class="index-body">
+    <div class="mr-container">
         <h1>Medication Request</h1>
     </div>
     <div class="index-body-two">
@@ -39,11 +47,11 @@
 
         <!-- Section: Patient Medical Info -->
         <div class="section_heading">
-        <h3> Prescriptions</h3>
+            <h3> Prescriptions</h3>
             <section class="p-prescript">
                 {% if patient.prescriptions %}
                     {% for prescription in patient.prescriptions %}
-                    <p class="m-name">{{ prescription.medication_name }}</p>
+                    <span class="m-name">{{ prescription.medication_name }}:  {{prescription.brand_name}}</span>
                     <ul class="m-details">
                         <li>Administer By: {{ prescription.enternal_route }}</li>
                         <li>Amount: {{ prescription.dose_amount }}</li>
@@ -91,7 +99,7 @@
         <h3>New Medication Request</h3>
 
             <!-- Form for medication request -->
-            <form action="/encounter/medication_request/submit?user_name={{ provider }}&patient_id={{ patient.id }}" method="post">
+            <form class="mr-form" action="/encounter/medication_request/submit?user_name={{ provider }}&patient_id={{ patient.id }}" method="post">
                 <label for="new_medication">Medication:</label>
                 <select name="new_medication" id="new_medication" required>
                     {% for medication in medications %}
@@ -106,7 +114,9 @@
                 Dosage: <input type="text" name="dose_amount" required><br>
                 Frequency: <input type="text" name="frequency" required><br>
                 Duration: <input type="text" name="duration"><br>
-                <button id="submitBtn" type="submit">Submit Request</button>
+                <button class="mr-submit" id="submitBtn" type="submit">Submit Request</button>
+                <button id="confirmBtn" class="hidden" type="button" onclick="confirmRequest()">Confirm Request</button>
+                <button id="redoBtn" class="hidden" type="button" onclick="redoRequest()">Redo Request</button>
             </form>
 
             <!-- After request, display drug-drug interaction issues -->
@@ -122,8 +132,6 @@
         </section>
 
         <!-- Buttons to activate after form submission: Confirm, Redo actions (maybe put in form)-->
-        <button id="confirmBtn" class="hidden" type="button" onclick="confirmRequest()">Confirm Request</button>
-        <button id="redoBtn" class="hidden" type="button" onclick="redoRequest()">Redo Request</button>
     </div>
     <!-- JS to hide/unhide buttons after form submission, redirect user on confirmation -->
     <script src="{{ url_for('static', path='scripts.js') }}"></script>

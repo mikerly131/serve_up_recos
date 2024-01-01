@@ -110,7 +110,7 @@ def serve_ddi_issues(db: Session, mr_id: int):
     # get the medication reqeust
     mr = db.query(models.MedicationRequest).filter(models.MedicationRequest.id == mr_id).first()
     # loop through each current medications
-    current_meds = list(map(int, mr.current_medication_ids.split()))
+    current_meds = list(map(int, mr.current_medication_ids.split(",")))
     issue_list = []
     for med in current_meds:
         # get issues for med and new_med
@@ -126,8 +126,9 @@ def serve_ddi_issues(db: Session, mr_id: int):
 def get_ddi_issue(db: Session, med1: int, med2: int):
     interaction = db.query(models.Interaction).filter(models.Interaction.medication_1 == med1,
                                                       models.Interaction.medication_2 == med2).first()
-    ddi_issue = interaction.issue_description
-    return ddi_issue
+    if interaction:
+        ddi_issue = interaction.issue_description
+        return ddi_issue
 
 
 # Helper function for medication request to return predictions of drug-drug interactions (ddi)
