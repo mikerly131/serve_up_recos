@@ -2,8 +2,8 @@ This project utilizes freely provided style elements under the MIT License.
 These elements are customized and changed to the projects needs, but some may be used as provided.
 This file will explain what elements 
 
-## Attribution: Register and Login Forms
-#### Use: styles.css, login.html, register.html
+## Attribution: CSS for Forms
+#### Use: styles.css, login.html, register.html, medication_request_wf.html
 #### Source: https://uiverse.io/nathann09/bad-hound-78
 
 Copyright (c) - 2023 nathann09 

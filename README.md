@@ -2,6 +2,7 @@
 FastAPI version of serveUpRecos
 
 # App Setup - Local
+### <span style="color: red;">THIS WON'T WORK - DATA FILES NOT IN THE REPO YET</span>
 1. Clone the repo in a directory. Now you have a project directory
 2. Setup a virtual environment in the project directory
 3. Install the requirements.txt file
