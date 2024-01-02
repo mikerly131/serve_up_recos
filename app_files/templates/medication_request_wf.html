@@ -52,7 +52,7 @@
             <section class="p-prescript">
                 {% if patient.prescriptions %}
                     {% for prescription in patient.prescriptions %}
-                    <span class="m-name">{{ prescription.medication_name }}:  {{prescription.brand_name}}</span>
+                    <span class="m-name">{{ prescription.medication_name }} ({{prescription.brand_name}})</span>
                     <ul class="m-details">
                         <li>Administer By: {{ prescription.enternal_route }}</li>
                         <li>Amount: {{ prescription.dose_amount }}</li>
