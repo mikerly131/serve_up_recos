@@ -30,7 +30,15 @@
         </form>
     </div>
 
-    <script src="{{ url_for('static', path='scripts.js') }}"></script>
+    <script>
+        document.getElementById("select_workflow").addEventListener("change", configureWorkflow)
+
+        function configureWorkflow() {
+            var selectedWorkflow = document.getElementById("select_workflow").value;
+            var form = document.getElementById("enc_setup");
+            form.action = `/encounter/${selectedWorkflow}`;
+        }
+    </script>
 
 </body>
 </html>

@@ -1,0 +1,61 @@
+This is some of the things I failed to be able to do with java script
+Java script is the dumbest thing I have ever encountered.
+
+//     <script src="{{ url_for('static', path='scripts.js') }}"></script>
+
+// For medication request, to confirm it after seeing issues
+function confirmRequest() {
+    alert('Confirmed Medication Request!');
+    var provider = "{{ provider|tojson|safe }}";
+    window.location.href = "{{ url_for('setup_encounter', user_name=provider) }}";
+}
+
+// For medication request, to unlock form for editing and submitting a new medication request
+function redoRequest() {
+    document.getElementById('submitBtn').disabled = false;
+    document.getElementById('confirmBtn').classList.add('hidden');
+    document.getElementById('redoBtn').classList.add('hidden');
+}
+
+// Listener to form submissions, locks form and unhides 2 buttons - Confirm, Redo
+document.getElementById('submitBtn').addEventListener('click', function () {
+    this.disabled = true;
+    document.getElementById('confirmBtn').classList.remove('hidden');
+    document.getElementById('redoBtn').classList.remove('hidden');
+});
+
+
+
+        function updateBrandName() {
+            var selectedBrandName = document.getElementById("new_market_med").text;
+            document.getElementById("brand_name").value = selectedBrandName;
+        }
+
+        function populateBrandNames() {
+            var selectedMedication = document.getElementById("new_medication");
+            var selectedMedicationValue = selectedMedication.options[selectedMedication.selectedIndex].value;
+            var marketMedDropdown = document.getElementById("new_market_med");
+
+            // Clear existing options
+            marketMedDropdown.innerHTML = "";
+
+            // Find the selected medication object from the list
+            var selectedMedicationObject = medications.find(function(med) {
+                return med.rxcui == selectedMedicationValue;
+            });
+
+            // Populate new_market_med dropdown with brand names
+            if (selectedMedicationObject) {
+                selectedMedicationObject.market_instances.forEach(function(marketInstance) {
+                    var option = document.createElement("option");
+                    option.value = marketInstance.id;
+                    option.text = marketInstance.brand_name;
+                    marketMedDropdown.add(option);
+                });
+            }
+
+            marketMedDropdown.addEventListener('change', updateBrandName);
+            updateBrandName();
+        }
+
+        window.addEventListener('DOMContentLoaded', populateBrandNames);

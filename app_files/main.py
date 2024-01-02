@@ -7,6 +7,8 @@ from fastapi import Depends, FastAPI, HTTPException, Request, Form
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
+from starlette.responses import JSONResponse
+
 from . import crud, models, schemas
 from .database import SessionLocal, engine
 from fastapi.templating import Jinja2Templates
@@ -101,7 +103,14 @@ def start_workflow(request: Request, user_name: str = Form(...), workflow_name: 
             "request": request, "provider": user_name, "patient": patient, "medications": medications})
 
 
-# PATH - POST: Submit medication request, get back issues for drug-drug interactions and show them
+# Path - GET: When medication selected in medication request form, populate the brand_names for selection
+# @app.get("/get_brand_names")
+# async def get_brand_names(request: Request, medication: int, db: Session = Depends(get_db)):
+#     brand_names = db.query(models.MarketMedication.brand_name, models.MarketMedication.id).filter(models.MarketMedication.medication_id == medication).all()
+#     return {"brand_names": brand_names}
+
+
+# Path - POST: Submit medication request, get back issues for drug-drug interactions and show them
 @app.post("/encounter/medication_request/submit")
 def medication_request(request: Request, user_name: str, patient_id: str, new_medication: str = Form(...), new_market_med: str = Form(...),
                        brand_name: str = Form(...), dose_amount: str = Form(...), enternal_route: str = Form(...), frequency: str = Form(...),

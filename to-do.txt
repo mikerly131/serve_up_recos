@@ -1,9 +1,10 @@
-1. Update enternal_route to be something like "administer_by".  Will require model, schema, crud, main updates and DB reload.
-2. Update the prescription_list.json for DB setup.  Need to get the accurate patient ids.  Do after #1.
-3. Style the p-prescript and the mr_form_data sections of medication_request_wf.html
-4. Create a logout endpoint, update header link to direct to it. Logout provider and redirect to login on click.
-5. Create a profile endpoint, update header to direct ot it. Redirect to profile on click.
-6. Write test - start with root/index, then figuring out how to mock db.
-7. Implement sessions and better authentication
+URGENT - Get dynamic population of brand names based on medication option in the mr form.
+LOW - Update enternal_route to be something like "administer_by".  Will require model, schema, crud, main updates and DB reload.
+LOW - Update deduped_meds.json or the market_medicaitons table to include an entry for Lithium since it has none.
+IN PROGRESS - Style the p-prescript and the mr_form_data sections of medication_request_wf.html
+MEDIUM - Create a logout endpoint, update header link to direct to it. Logout provider and redirect to login on click.
+LOW -  Create a profile endpoint, update header to direct ot it. Redirect to profile on click.
+MEDIUM - Write test - start with root/index, then figuring out how to mock db.
+HIGH - Implement sessions and better authentication
 
 1/1/24 -  Rebuilt DB with prescriptions tied to patients.  Includes renamed model data for medication requests.
