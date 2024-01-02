@@ -5,6 +5,7 @@
 
 var medicationSelect = document.getElementById('new_medication')
 var brandSelect = document.getElementById('new_market_med')
+var brandSelectName = document.getElementById('brand_name')
 
 function loadBrands() {
 
@@ -28,16 +29,10 @@ function loadBrands() {
 
 // Add event listener to the brandSelect dropdown to update the hidden input
 brandSelect.addEventListener('change', function () {
-    const selectedBrandId = brandSelect.value;
-    const selectedBrand = findBrandById(selectedBrandId);
-    brandNameInput.value = selectedBrand ? selectedBrand.brand_name : '';
+    var selectedBrandName = brandSelect.options[brandSelect.selectedIndex];
+    brandSelectName.value = selectedBrandName.textContent;
 });
 
-// Helper function to find the brand object by ID in the fetched data
-function findBrandById(brandId) {
-    const brands = data.brand_names; // Assuming 'data' is accessible here
-    return brands.find(brand => brand.id === brandId);
-}
 
 document.addEventListener('DOMContentLoaded', function () {
     // This function will be called once the DOM is ready

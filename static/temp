@@ -1,6 +1,11 @@
 This is some of the things I failed to be able to do with java script
 Java script is the dumbest thing I have ever encountered.
 
+Administer By: <input type="text" name="enternal_route" required value="{{ sub_data.enternal_route if sub_data else '' }}"><br>
+Dosage: <input type="text" name="dose_amount" required value="{{ sub_data.dose_amount if sub_data else '' }}"><br>
+Frequency: <input type="text" name="frequency" required value="{{ sub_data.frequency if sub_data else '' }}"><br>
+Duration: <input type="text" name="duration" required value="{{ sub_data.duration if sub_data else '' }}"><br>
+
 <button id="confirmBtn" class="hidden" type="button" onclick="confirmRequest()">Confirm Request</button>
 <button id="redoBtn" class="hidden" type="button" onclick="redoRequest()">Redo Request</button>
 

@@ -112,14 +112,13 @@
                 Administer By: <input type="text" name="enternal_route" required><br>
                 Dosage: <input type="text" name="dose_amount" required><br>
                 Frequency: <input type="text" name="frequency" required><br>
-                Duration: <input type="text" name="duration"><br>
+                Duration: <input type="text" name="duration" required><br>
                 <button class="mr-submit" id="submitBtn" type="submit">Submit Request</button>
             </form>
 
             <!-- After request, display drug-drug interaction issues -->
             {% if issue_list %}
-                <h2>Drug Interactions Issues:</h2>
-                <h3>New Medication: {{ new_med_name }} </h3>
+                <h3>Drug Interactions Issues:</h3>
                 <ul>
                     {% for issue in issue_list %}
                         <li>{{ issue }}</li>

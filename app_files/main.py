@@ -136,7 +136,15 @@ def medication_request(request: Request, user_name: str, patient_id: str, new_me
         "user_name": user_name,
         "patient": patient,
         "medications": medications,
-        "new_med_name": med_name,
         "issue_list": issue_list,
+        "sub_data": {
+            "new_medication": new_medication,
+            "new_market_med": new_market_med,
+            "brand_name": brand_name,
+            "dose_amount": dose_amount,
+            "enternal_route": enternal_route,
+            "frequency": frequency,
+            "duration": duration
+        }
     }
     return templates.TemplateResponse(template_name, template_context)
