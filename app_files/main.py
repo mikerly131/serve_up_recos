@@ -104,10 +104,13 @@ def start_workflow(request: Request, user_name: str = Form(...), workflow_name: 
 
 
 # Path - GET: When medication selected in medication request form, populate the brand_names for selection
-# @app.get("/get_brand_names")
-# async def get_brand_names(request: Request, medication: int, db: Session = Depends(get_db)):
-#     brand_names = db.query(models.MarketMedication.brand_name, models.MarketMedication.id).filter(models.MarketMedication.medication_id == medication).all()
-#     return {"brand_names": brand_names}
+@app.get("/get_brand_names/{medication}")
+async def get_brand_names(request: Request, medication: int, db: Session = Depends(get_db)):
+    brand_names = db.query(models.MarketMedication.brand_name, models.MarketMedication.id).filter(models.MarketMedication.medication_id == medication).all()
+
+    # I can't believe this is what I needed to do to make the data useable, why and what?????
+    brand_names_data = [{"brand_name": brand_name, "id": brand_id} for brand_name, brand_id in brand_names]
+    return {"brand_names": brand_names_data}
 
 
 # Path - POST: Submit medication request, get back issues for drug-drug interactions and show them

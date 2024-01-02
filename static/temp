@@ -1,7 +1,10 @@
 This is some of the things I failed to be able to do with java script
 Java script is the dumbest thing I have ever encountered.
 
-//     <script src="{{ url_for('static', path='scripts.js') }}"></script>
+<button id="confirmBtn" class="hidden" type="button" onclick="confirmRequest()">Confirm Request</button>
+<button id="redoBtn" class="hidden" type="button" onclick="redoRequest()">Redo Request</button>
+
+//<script src="{{ url_for('static', path='scripts.js') }}"></script>
 
 // For medication request, to confirm it after seeing issues
 function confirmRequest() {

@@ -5,9 +5,6 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="{{ url_for('static', path='styles.css') }}">
     <style>
-        .hidden {
-            display: none;
-        }
         .mr-container {
             padding-left: 20px;
             padding-top: 20px;
@@ -102,26 +99,21 @@
             <!-- Form for medication request -->
             <form class="mr-form" action="/encounter/medication_request/submit?user_name={{ provider }}&patient_id={{ patient.id }}" method="post">
                 <label for="new_medication">Medication:</label>
-                <select name="new_medication" id="new_medication" required>
+                <select name="new_medication" id="new_medication" required onchange="loadBrands()">
                     {% for medication in medications %}
                     <option value="{{ medication.rxcui }}">
                         {{ medication.generic_name }}
                     </option>
                     {% endfor %}
                 </select><br>
-                <!-- <label for="new_market_med">Brand:</label>
-                <select name="new_market_med" id="new_market_med" required></select>
-                <input type="hidden" name="brand_name" id="brand_name"> -->
-                <input type="hidden" name="new_market_med" value="1">
-                Brand: <input type="text" name="brand_name" required><br>
+                <label for="new_market_med">Brand:</label>
+                <select name="new_market_med" id="new_market_med" required></select><br>
+                <input type="hidden" name="brand_name" id="brand_name" value="">
                 Administer By: <input type="text" name="enternal_route" required><br>
                 Dosage: <input type="text" name="dose_amount" required><br>
                 Frequency: <input type="text" name="frequency" required><br>
                 Duration: <input type="text" name="duration"><br>
                 <button class="mr-submit" id="submitBtn" type="submit">Submit Request</button>
-                <!-- Buttons to activate after form submission: Confirm, Redo actions (maybe put in form)-->
-                <button id="confirmBtn" class="hidden" type="button" onclick="confirmRequest()">Confirm Request</button>
-                <button id="redoBtn" class="hidden" type="button" onclick="redoRequest()">Redo Request</button>
             </form>
 
             <!-- After request, display drug-drug interaction issues -->
@@ -136,6 +128,8 @@
             {% endif %}
         </section>
     </div>
+
+    <script src="{{ url_for('static', path='/scripts.js') }}"></script>
 
 
 </body>
